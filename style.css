@@ -152,3 +152,323 @@ footer{ color:var(--muted); font-size:13px; text-align:center; margin-top:18px; 
 /* UTILITIES */
 .text-center { text-align: center !important; }
 .archers-table th.text-center, .archers-table td.text-center { text-align: center; }
+
+/* ======================== */
+/* Styles for Matches Page  */
+/* ======================== */
+
+/* Làm cho modal thêm điểm rộng hơn */
+.modal-content.modal-lg {
+  max-width: 800px;
+}
+
+/* Bảng điểm */
+.scores-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.scores-table thead {
+  background: #f9fafb;
+}
+.scores-table th {
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #e5e7eb;
+}
+.scores-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #1f2937;
+  vertical-align: middle;
+}
+.scores-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.scores-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* Huy hiệu trạng thái */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.status-approved {
+  background: #d1fae5; /* Green */
+  color: #065f46;
+}
+.status-staged {
+  background: #ffedd5; /* Orange */
+  color: #9a3412;
+}
+
+/* Nút checkbox trong modal */
+.form-group label[for="isApproved"] {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.form-group input[type="checkbox"] {
+  width: auto;
+  height: 1rem;
+  width: 1rem;
+}
+
+/* Tô sáng tổng điểm */
+.score-total {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+/* Căn chỉnh bộ lọc */
+.table-controls {
+  display: flex;
+  gap: 0.75rem;
+}
+.search-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+.filter-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+}
+
+/* ======================== */
+/* Styles for Equipment Page */
+/* ======================== */
+
+/* Bảng equipment */
+.equipment-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.equipment-table thead {
+  background: #f9fafb;
+}
+.equipment-table th {
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #e5e7eb;
+}
+.equipment-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #1f2937;
+  vertical-align: middle;
+}
+.equipment-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.equipment-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* Huy hiệu loại thiết bị */
+.type-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #e0e7ff; /* Indigo */
+  color: #3730a3;
+}
+
+/* Ô ghi chú */
+.notes-cell {
+  font-style: italic;
+  color: var(--muted);
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Textarea trong modal */
+.form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+/* ======================== */
+/* Styles for Statistics Page */
+/* ======================== */
+
+.statistics-page .card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+/* Bộ lọc */
+.stats-filters {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.stats-filters .form-group {
+  margin-bottom: 0;
+  flex-grow: 1;
+}
+.stats-filters .form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+/* Bảng xếp hạng */
+.leaderboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.leaderboard-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+.leaderboard-card h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.leaderboard-table td {
+  padding: 0.75rem 0.25rem;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+.leaderboard-table tr:last-child td {
+  border-bottom: none;
+}
+.leaderboard-table .archer-name {
+  font-weight: 600;
+}
+.leaderboard-table .avatar-small {
+  font-size: 0.75rem;
+  width: 32px;
+  height: 32px;
+}
+
+.leader-rank {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 0.9rem;
+  width: 30px;
+  display: inline-block;
+  text-align: center;
+}
+.leader-value {
+  text-align: right;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+/* Biểu đồ */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.chart-subtitle {
+    text-align: center;
+    color: var(--muted);
+    padding: 2rem 0;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ======================== */
+/* Styles for Settings Page */
+/* ======================== */
+
+.settings-section {
+  margin-bottom: 2rem;
+}
+
+/* Nút "Add" nhỏ hơn trong header của bảng */
+.btn-primary.small {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+.btn-primary.small span {
+   font-size: 1.25rem;
+}
+
+/* Bảng cài đặt đơn giản hơn */
+.settings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.settings-table thead {
+  background: #f9fafb;
+}
+.settings-table th {
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #e5e7eb;
+}
+.settings-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #1f2937;
+  vertical-align: middle;
+}
+.settings-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.settings-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.settings-table td.muted {
+    color: var(--muted);
+}

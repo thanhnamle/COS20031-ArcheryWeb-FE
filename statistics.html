@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archery Score System — Statistics</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">
+                    <img src="images/archer_logo.jpg" alt="Logo" class="logo-img" />
+                </div>
+                <div class="title">
+                    <h1>Archery Score System</h1>
+                    <p>Competition & Training Management</p>
+                </div>
+            </div>
+        </header>
+
+        <nav class="nav">
+            <a href="index.html">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="archers.html">
+                <span>🏹</span> Archers
+            </a>
+            <a href="matches.html">
+                <span>⚔️</span> Matches
+            </a>
+            <a href="equipment.html">
+                <span>🎒</span> Equipment
+            </a>
+            <a href="statistics.html" class="active">
+                <span>📈</span> Statistics
+            </a>
+            <a href="settings.html">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+
+        <main class="statistics-page" role="main">
+            <div class="page-header">
+                <div>
+                    <h2>Statistics & Leaderboards</h2>
+                    <p class="sub">Analyze performance and compare archers</p>
+                </div>
+            </div>
+
+            <section class="stats-filters card">
+                <div class="form-group">
+                    <label for="statArcherFilter">Filter by Archer</label>
+                    <select id="statArcherFilter">
+                        <option value="">All Archers</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="statRoundFilter">Filter by Round</label>
+                    <select id="statRoundFilter">
+                        <option value="">All Rounds</option>
+                        </select>
+                </div>
+                 <div class="form-group">
+                    <label for="statGenderFilter">Filter by Gender</label>
+                    <select id="statGenderFilter">
+                        <option value="">All Genders</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="leaderboard-grid">
+                <article class="leaderboard-card">
+                    <h3>🏆 Best Score</h3>
+                    <table class="leaderboard-table">
+                        <tbody id="leaderboardBestScore">
+                            </tbody>
+                    </table>
+                </article>
+
+                <article class="leaderboard-card">
+                    <h3>📈 Average Score</h3>
+                    <table class="leaderboard-table">
+                         <tbody id="leaderboardAvgScore">
+                            </tbody>
+                    </table>
+                </article>
+
+                <article class="leaderboard-card">
+                    <h3>🎯 Total X's</h3>
+                    <table class="leaderboard-table">
+                         <tbody id="leaderboardTotalXs">
+                            </tbody>
+                    </table>
+                </article>
+            </section>
+            
+            <section class="charts-grid">
+                <article class="chart-card">
+                     <div class="chart-title">Score Distribution</div>
+                     <div class="chart-wrapper">
+                        <canvas id="scoreDistributionChart"></canvas>
+                     </div>
+                </article>
+                
+                <article class="chart-card">
+                     <div class="chart-title">Performance Over Time</div>
+                     <p class="chart-subtitle" id="performanceChartSubtitle">Select an archer to see their progress</p>
+                     <div class="chart-wrapper">
+                        <canvas id="performanceChart"></canvas>
+                     </div>
+                </article>
+            </section>
+
+
+            <footer>Demo data stored in <code>localStorage</code> key <strong>archery_demo_data_v1</strong></footer>
+        </main>
+    </div>
+
+    <script src="javascript\statistics.js"></script>
+</body>
+</html>

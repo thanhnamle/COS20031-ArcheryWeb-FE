@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archery Score System — Equipment</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">
+                    <img src="images/archer_logo.jpg" alt="Logo" class="logo-img" />
+                </div>
+                <div class="title">
+                    <h1>Archery Score System</h1>
+                    <p>Competition & Training Management</p>
+                </div>
+            </div>
+        </header>
+
+        <nav class="nav">
+            <a href="index.html">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="archers.html">
+                <span>🏹</span> Archers
+            </a>
+            <a href="matches.html">
+                <span>⚔️</span> Matches
+            </a>
+            <a href="equipments.html" class="active">
+                <span>🎒</span> Equipment
+            </a>
+            <a href="statistics.html">
+                <span>📈</span> Statistics
+            </a>
+            <a href="settings.html">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+
+        <main class="equipment-page" role="main">
+            <div class="page-header">
+                <div>
+                    <h2>Equipment Management</h2>
+                    <p class="sub">Manage and assign equipment to archers</p>
+                </div>
+                <button class="btn-primary" onclick="showEquipmentModal()">
+                    <span>+</span> Add Equipment
+                </button>
+            </div>
+
+            <section class="cards" aria-label="Key metrics">
+                <div class="card">
+                    <div>
+                        <div class="meta">Total Items</div>
+                        <div class="value" id="totalItems">0</div>
+                    </div>
+                    <div class="icon">🎒</div>
+                </div>
+                <div class="card">
+                    <div>
+                        <div class="meta">Assigned</div>
+                        <div class="value" id="assignedItems">0</div>
+                    </div>
+                    <div class="icon">🧍🏻</div>
+                </div>
+                <div class="card">
+                    <div>
+                        <div class="meta">Unassigned</div>
+                        <div class="value" id="unassignedItems">0</div>
+                    </div>
+                    <div class="icon">📦</div>
+                </div>
+            </section>
+
+            <section class="table-section">
+                <header class="table-header">
+                    <h2>Equipment List</h2>
+                    <nav class="table-controls">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Search equipment..."
+                            class="search-input"
+                            aria-label="Search equipment"
+                        >
+                        <select id="typeFilter" class="filter-select" aria-label="Filter by type">
+                            <option value="">All Types</option>
+                            </select>
+                         <select id="archerFilter" class="filter-select" aria-label="Filter by archer">
+                            <option value="">All Archers</option>
+                             <option value="unassigned">Unassigned</option>
+                            </select>
+                    </nav>
+                </header>
+
+                <article class="table-wrapper">
+                    <table class="equipment-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name / Nickname</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Assigned To</th>
+                                <th scope="col">Notes</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipmentTableBody">
+                            </tbody>
+                    </table>
+
+                    <aside id="emptyState" class="empty-state" style="display: none;">
+                        <p>No equipment found. Click "Add Equipment" to get started!</p>
+                    </aside>
+                </article>
+            </section>
+
+            <footer>Demo data stored in <code>localStorage</code> key <strong>archery_demo_data_v1</strong></footer>
+        </main>
+
+        <aside id="equipmentModal" class="modal" style="display: none;">
+            <div class="modal-overlay" onclick="closeEquipmentModal()"></div>
+            <section class="modal-content">
+                <header class="modal-header">
+                    <h2 id="modalTitle">Add New Equipment</h2>
+                    <button class="modal-close" onclick="closeEquipmentModal()" aria-label="Close modal">
+                        ×
+                    </button>
+                </header>
+
+                <article class="modal-body">
+                    <form id="equipmentForm">
+                        <input type="hidden" id="equipmentId" value="">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="equipmentName">Name / Nickname *</label>
+                                <input type="text" id="equipmentName" required placeholder="e.g., My First Bow">
+                                <span class="form-error" id="equipmentNameError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="equipmentTypeId">Equipment Type *</label>
+                                <select id="equipmentTypeId" required>
+                                    <option value="">Select type...</option>
+                                    </select>
+                                <span class="form-error" id="equipmentTypeIdError"></span>
+                            </div>
+                        </div>
+
+                         <div class="form-row">
+                            <div class="form-group">
+                                <label for="archerId">Assigned To</label>
+                                <select id="archerId">
+                                    <option value="">None (Unassigned)</option>
+                                    </select>
+                            </div>
+                        </div>
+                        
+                         <div class="form-group">
+                            <label for="notes">Notes</label>
+                            <textarea id="notes" rows="3" placeholder="e.g., Riser model, limb specs, string type..."></textarea>
+                         </div>
+                    </form>
+                </article>
+
+                <footer class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeEquipmentModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary" onclick="saveEquipment(event)">
+                        <span id="saveButtonText">Add Equipment</span>
+                    </button>
+                </footer>
+            </section>
+        </aside>
+
+        <aside id="toast" class="toast" style="display: none;"></aside>
+    </div>
+
+    <script src="javascript\equipment.js"></script>
+</body>
+</html>
