@@ -187,3 +187,4 @@ function refreshAll(){
 
 // Save on unload
 window.addEventListener("beforeunload", ()=> saveData(data));
+
