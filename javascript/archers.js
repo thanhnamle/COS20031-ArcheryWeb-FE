@@ -151,6 +151,9 @@ function renderArchersTable(filters = {}){
       <td class="text-center">${stats.totalXs}</td>
       <td class="text-center">
         <div class="action-buttons">
+          <button class="btn-icon btn-view" onclick="window.location.href='archer-detail.html?id=${archer.id}'" title="View Details">
+            👁️
+          </button>
           <button class="btn-icon btn-edit" onclick="editArcher('${archer.id}')" title="Edit">
             ✏️
           </button>

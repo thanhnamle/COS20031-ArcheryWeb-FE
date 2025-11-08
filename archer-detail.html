@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archery Score System — Archer Detail</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">
+                    <img src="images/archer_logo.jpg" alt="Logo" class="logo-img" />
+                </div>
+                <div class="title">
+                    <h1>Archery Score System</h1>
+                    <p>Competition & Training Management</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <a href="index.html">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="archers.html" class="active">
+                <span>🏹</span> Archers
+            </a>
+            <a href="matches.html">
+                <span>⚔️</span> Matches
+            </a>
+            <a href="statistics.html">
+                <span>📈</span> Statistics
+            </a>
+            <a href="settings.html">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+
+        <main class="archer-detail-page" role="main">
+            <!-- Breadcrumb Navigation -->
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="archers.html">ARCHERS</a>
+                <span class="breadcrumb-separator">&gt;</span>
+                <span id="breadcrumbName">ARCHER NAME</span>
+            </nav>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading archer information...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="error-state" style="display: none;">
+                <p id="errorMessage">Failed to load archer data</p>
+                <button class="btn-primary" onclick="window.location.href='archers.html'">
+                    Back to Archers
+                </button>
+            </div>
+
+            <!-- Archer Profile Section -->
+            <section id="archerProfile" class="archer-profile" style="display: none;">
+                <div class="profile-header">
+                    <div class="profile-photo-container">
+                        <img id="archerPhoto" src="" alt="Archer Photo" class="profile-photo" />
+                        <div id="archerPhotoPlaceholder" class="profile-photo-placeholder">
+                            <span id="archerInitials"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="profile-name-row">
+                            <h1 id="archerName" class="profile-name">Archer Name</h1>
+                            <button class="btn-favorite" onclick="toggleFavorite()" title="Add to favorites">
+                                ⭐
+                            </button>
+                        </div>
+                        
+                        <div class="profile-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">BWF Ranking</span>
+                                <span class="meta-value" id="archerRanking">N/A</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Age</span>
+                                <span class="meta-value">
+                                    <span id="archerAge">-</span>
+                                    <span class="meta-dob" id="archerDOB"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <nav class="tab-navigation">
+                    <button class="tab-btn active" data-tab="overall" onclick="switchTab('overall')">
+                        TÓM TẮT
+                    </button>
+                    <button class="tab-btn" data-tab="performance" onclick="switchTab('performance')">
+                        ĐIỂM TIN
+                    </button>
+                    <button class="tab-btn" data-tab="results" onclick="switchTab('results')">
+                        KẾT QUẢ
+                    </button>
+                    <button class="tab-btn" data-tab="match-history" onclick="switchTab('match-history')">
+                        LỊCH THI ĐẤU
+                    </button>
+                </nav>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Overall Tab -->
+                    <div id="tab-overall" class="tab-pane active">
+                        <div class="info-section">
+                            <h3 class="section-title">Basic Information</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-label">Archer ID</span>
+                                    <span class="info-value" id="archerId">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">First Name</span>
+                                    <span class="info-value" id="firstName">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Last Name</span>
+                                    <span class="info-value" id="lastName">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Date of Birth</span>
+                                    <span class="info-value" id="dateOfBirth">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Gender</span>
+                                    <span class="info-value" id="gender">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Default Equipment</span>
+                                    <span class="info-value" id="defaultEquipment">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Club Name</span>
+                                    <span class="info-value" id="clubName">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Created At</span>
+                                    <span class="info-value" id="createdAt">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Updated At</span>
+                                    <span class="info-value" id="updatedAt">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Tab -->
+                    <div id="tab-performance" class="tab-pane">
+                        <div class="info-section">
+                            <h3 class="section-title">Performance Statistics</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-icon">🎯</div>
+                                    <div class="stat-content">
+                                        <div class="stat-label">Total Score</div>
+                                        <div class="stat-value" id="totalScore">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">🏆</div>
+                                    <div class="stat-content">
+                                        <div class="stat-label">Best Score</div>
+                                        <div class="stat-value" id="bestScore">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">✨</div>
+                                    <div class="stat-content">
+                                        <div class="stat-label">Total X's</div>
+                                        <div class="stat-value" id="totalXs">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">📊</div>
+                                    <div class="stat-content">
+                                        <div class="stat-label">Average Score</div>
+                                        <div class="stat-value" id="avgScore">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">🎲</div>
+                                    <div class="stat-content">
+                                        <div class="stat-label">Total Matches</div>
+                                        <div class="stat-value" id="totalMatches">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Tab -->
+                    <div id="tab-results" class="tab-pane">
+                        <div class="info-section">
+                            <h3 class="section-title">Competition Results</h3>
+                            <div class="results-summary">
+                                <div class="result-item">
+                                    <span class="result-label">Total Competitions</span>
+                                    <span class="result-value" id="totalCompetitions">0</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">Approved Scores</span>
+                                    <span class="result-value" id="approvedScores">0</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">Pending Scores</span>
+                                    <span class="result-value" id="pendingScores">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Match History Tab -->
+                    <div id="tab-match-history" class="tab-pane">
+                        <div class="info-section">
+                            <h3 class="section-title">Match History</h3>
+                            <div id="matchHistoryContainer">
+                                <div id="emptyMatches" class="empty-matches">
+                                    <p>No match history available</p>
+                                </div>
+                                <div class="table-wrapper" id="matchesTable" style="display: none;">
+                                    <table class="matches-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Round</th>
+                                                <th>Competition</th>
+                                                <th>Equipment</th>
+                                                <th>Score</th>
+                                                <th>X's</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="matchesTableBody">
+                                            <!-- Match history rows will be rendered here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- main script -->
+    <script src="javascript/archer-detail.js"></script>
+</body>
+</html>
