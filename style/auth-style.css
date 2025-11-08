@@ -1,0 +1,128 @@
+/* style/auth-style.css */
+:root {
+    --primary-color: #2563eb;
+    --bg-light: #f7f9fb;
+    --text-dark: #0f172a;
+    --text-muted: #6b7280;
+    --border-color: #d1d5db;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, ui-sans-serif, system-ui;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    flex-direction: column;
+}
+
+.auth-card {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.auth-card h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+}
+
+.auth-card p {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Quan trọng */
+}
+
+.auth-button {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.auth-button:hover {
+    background: #1d4ed8;
+}
+
+.auth-switch {
+    margin-top: 1.5rem;
+    color: var(--text-muted);
+}
+.auth-switch a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-error {
+    color: #ef4444;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+.auth-back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    transition: color 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.auth-back-link:hover i {
+    transform: translateX(-3px);
+    transition: transform 0.2s ease;
+}
+
+.auth-back-link i {
+    margin-right: 0.35rem;
+    font-size: 0.85rem;
+}
+
+.auth-back-link:hover {
+    color: var(--primary-color);
+}

@@ -1,15 +1,26 @@
-/*
-  layout.js
-  - Tải header và navigation dùng chung
-  - Tự động đặt lớp 'active' cho liên kết điều hướng hiện tại
-*/
+/* javascript/layout.js */
 
 document.addEventListener("DOMContentLoaded", () => {
+    // === BẢO VỆ TRANG ===
+    // Kiểm tra xem người dùng đã đăng nhập chưa
+    const user = localStorage.getItem("archery_auth_user");
+    
+    // Nếu không có thông tin user, chuyển hướng về trang login
+    if (!user) {
+        // Đảm bảo không chuyển hướng nếu chúng ta *đang* ở trang login/signup
+        // (Mặc dù các trang đó không nên tải file này)
+        if(window.location.pathname.includes('login.html') || window.location.pathname.includes('signup.html')) {
+            return;
+        }
+        window.location.href = 'login.html';
+        return; // Dừng thực thi phần còn lại của script
+    }
+    // === KẾT THÚC BẢO VỆ ===
+
     loadHeader();
 });
 
 function loadHeader() {
-    // Sử dụng fetch để lấy nội dung của _header.html
     fetch('header.html')
         .then(response => {
             if (!response.ok) {
@@ -18,47 +29,44 @@ function loadHeader() {
             return response.text();
         })
         .then(html => {
-            // Chèn HTML vào placeholder
             const placeholder = document.getElementById('header-placeholder');
             if (placeholder) {
-                placeholder.innerHTML = html;
+                // Chúng ta không chèn vào placeholder nữa
+                // mà chèn trực tiếp vào body
+                document.body.insertAdjacentHTML('afterbegin', html);
             }
             
-            // Sau khi chèn xong, gọi hàm để đặt link active
             setActiveNavigation();
         })
         .catch(error => {
             console.error('Error fetching header:', error);
-            const placeholder = document.getElementById('header-placeholder');
-            if (placeholder) {
-                placeholder.innerHTML = '<p style="color:red;">Error loading header content.</p>';
-            }
         });
 }
 
 function setActiveNavigation() {
-    // Lấy tên tệp của trang hiện tại (ví dụ: "archers.html")
     const currentPage = window.location.pathname.split('/').pop();
-
-    // CẬP NHẬT DÒNG NÀY: 'index.html' (trang landing mới) không có trong nav
-    // Trang chủ của dashboard giờ là 'dashboard.html'
-    const pageName = (currentPage === '' || currentPage === '/' || currentPage === 'index.html') 
-        ? 'dashboard.html' // Mặc định là dashboard nếu không khớp
-        : currentPage;
     
-    // Xử lý trường hợp đặc biệt nếu người dùng truy cập 'index.html' (trang landing)
-    // thì không active link nào, nhưng nếu họ ở trang dashboard.html thì phải active
-    const effectivePageName = (currentPage === 'index.html') ? '' : pageName;
+    // Sửa logic: index.html là trang dashboard
+    const pageName = (currentPage === '' || currentPage === '/') 
+        ? 'index.html' // Trang dashboard là index.html
+        : currentPage;
 
-    // Lấy tất cả các liên kết trong <nav class="nav">
     const navLinks = document.querySelectorAll('nav.nav a');
     
     navLinks.forEach(link => {
         const linkHref = link.getAttribute('href');
         
-        // So sánh href của liên kết với tên trang hiện tại
-        if (linkHref === effectivePageName) {
+        if (linkHref === pageName) {
             link.classList.add('active');
         }
     });
+}
+
+// === HÀM ĐĂNG XUẤT ===
+function logout() {
+    if (confirm("Are you sure you want to logout?")) {
+        localStorage.removeItem("archery_auth_user");
+        localStorage.removeItem("archery_demo_data_v1"); // Xóa cả data demo
+        window.location.href = 'login.html';
+    }
 }

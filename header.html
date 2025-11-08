@@ -10,10 +10,45 @@
 <body>
     <aside class="sidebar">
         <header class="sidebar-header">
-            <a href="#">
-                <img src="images\archer_logo.jpg" alt="ArcherLogo">
+            <a href="index.html" class="sidebar-logo-link">
+                <img src="images/archer_logo.jpg" alt="ArcherLogo" class="sidebar-logo">
+                <span class="sidebar-logo-text">Archery Manager</span>
             </a>
         </header>
+
+        <nav class="nav sidebar-nav">
+            <a href="index.html">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="archers.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Archers</span>
+            </a>
+            <a href="matches.html">
+                <i class="fa-solid fa-bullseye"></i>
+                <span>Matches</span>
+            </a>
+            <a href="equipments.html">
+                <i class="fa-solid fa-bow-arrow"></i>
+                <span>Equipment</span>
+            </a>
+            <a href="statistics.html">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Statistics</span>
+            </a>
+            <a href="settings.html">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <footer class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+        </footer>
     </aside>
 </body>
 </html>
