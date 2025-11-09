@@ -152,3 +152,50 @@ footer{ color:var(--muted); font-size:13px; text-align:center; margin-top:18px; 
 /* UTILITIES */
 .text-center { text-align: center !important; }
 .archers-table th.text-center, .archers-table td.text-center { text-align: center; }
+
+/* ========== ARCHER DETAIL PAGE ========== */
+.archer-detail-page { padding: 2rem; max-width: 1200px; margin: 0 auto; font-family: "Inter", sans-serif; }
+
+/* ---- Back Button ---- */
+.btn-back { padding: 0.6rem 1.2rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-back:hover { background: #e5e7eb; transform: translateX(-3px); }
+
+/* ---- Profile Header ---- */
+.profile-header { background: #fff; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 2rem; }
+.profile-avatar-large { width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg,#f59e0b,#d97706); color:#fff; font-size:2.5rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.profile-info h1 { margin: 0 0 0.4rem; color:#111827; font-size:1.8rem; }
+.profile-meta { color:#6b7280; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem; }
+.meta-divider { color:#d1d5db; }
+.profile-actions { margin-left:auto; display:flex; flex-direction:column; gap:0.5rem; }
+.btn-primary,.btn-danger { padding:0.6rem 1.2rem; border:none; border-radius:8px; font-weight:600; cursor:pointer; transition:0.2s; }
+.btn-primary { background:#446cff; color:#fff; }
+.btn-primary:hover { background:#3155d0; }
+.btn-danger { background:#ef4444; color:#fff; }
+.btn-danger:hover { background:#dc2626; }
+
+/* ---- Tabs Container ---- */
+.tabs.card { background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05); padding:0; }
+
+/* ---- Tab List ---- */
+.tabs.card {
+  display: block; width: 100%; grid-column: 1 / -1; align-self: stretch; margin-bottom: 1rem;
+}
+.tab { background:none; border:none; font-weight:600; color:#6b7280; font-size:1rem; padding:0.75rem 1.25rem; cursor:pointer; transition:0.2s; border-radius:6px 6px 0 0; }
+.tab:hover { color:#111827; }
+.tab.active { color:#111827; border-bottom:3px solid #446cff; }
+
+/* ---- Tab Panels ---- */
+.tab-panels { width: 100%; display: block; }
+.tab-panel { display:none; width: 100%;; }
+.tab-panel.active { display:block; }
+@keyframes fadeIn { from {opacity:0;transform:translateY(10px);} to {opacity:1;transform:translateY(0);} }
+
+/* ---- Tables ---- */
+.detail-table { width:100%; border-collapse:collapse; font-size:0.95rem; color:#374151; }
+.detail-table th { text-align:left; padding:0.4rem 0.6rem; width:200px; color:#6b7280; font-weight:500; }
+.detail-table td { padding:0.4rem 0.6rem; font-weight:600; color:#111827; border-bottom:1px solid #f3f4f6; }
+
+/* ---- Utilities ---- */
+.grid-2 { display:grid; grid-template-columns:1fr; gap:1.5rem; }
+.chart-card { background:#fafafa; padding:1rem; border-radius:8px; box-shadow:inset 0 0 0 1px #f3f4f6; }
+footer { text-align:center; margin-top:2rem; font-size:0.85rem; color:#9ca3af; }

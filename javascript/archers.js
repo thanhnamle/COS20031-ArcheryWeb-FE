@@ -131,7 +131,7 @@ function renderArchersTable(filters = {}){
     row.innerHTML = `
       <td class="text-center">${index + 1}</td>
       <td>
-        <div class="archer-name">
+        <div class="archer-name" style="cursor: pointer;" onclick="viewArcherDetail('${archer.id}')">
           <div class="avatar-small">${archer.first[0]}${archer.last[0]}</div>
           <strong>${archer.first} ${archer.last}</strong>
         </div>
@@ -143,12 +143,6 @@ function renderArchersTable(filters = {}){
       </td>
       <td class="text-center">${age}</td>
       <td class="text-center">${dobFormatted}</td>
-      <td class="text-center">${stats.totalScores}</td>
-      <td class="text-center">
-        <span class="score-highlight">${stats.bestScore}</span>
-      </td>
-      <td class="text-center">${stats.avgScore}</td>
-      <td class="text-center">${stats.totalXs}</td>
       <td class="text-center">
         <div class="action-buttons">
           <button class="btn-icon btn-edit" onclick="editArcher('${archer.id}')" title="Edit">
@@ -473,3 +467,8 @@ window.addEventListener("beforeunload", () => {
   const data = loadData();
   if(data) saveData(data);
 });
+
+// View archer detail page
+function viewArcherDetail(id){
+  window.location.href = `archer-detail.html?id=${id}`;
+}

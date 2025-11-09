@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Archery Score System — Archers</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">
+            <img src="images/archer_logo.jpg" alt="Logo" class="logo-img" />
+          </div>
+          <div class="title">
+            <h1>Archery Score System</h1>
+            <p>Competition & Training Management</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Navigation -->
+      <nav class="nav">
+        <a href="index.html"><span>📊</span> Dashboard</a>
+        <a href="archers.html" class="active"><span>🏹</span> Archers</a>
+        <a href="matches.html"><span>⚔️</span> Matches</a>
+        <a href="statistics.html"><span>📈</span> Statistics</a>
+        <a href="settings.html"><span>⚙️</span> Settings</a>
+      </nav>
+
+      <main class="archer-detail-page" role="main">
+        <div class="back-row">
+          <button class="btn-back" onclick="goBack()">Archers</button>
+        </div>
+
+        <!-- Archer Profile Header -->
+        <section class="profile-header">
+          <div class="profile-avatar-large" id="profileAvatar">JW</div>
+          <div class="profile-info">
+            <h1 id="archerName">Loading...</h1>
+            <div class="profile-meta">
+              <span class="meta-item" id="archerGender">-</span>
+              <span class="meta-divider">•</span>
+              <span class="meta-item" id="archerAge">-</span>
+              <span class="meta-divider">•</span>
+              <span class="meta-item" id="archerDOB">-</span>
+            </div>
+          </div>
+          <div class="profile-actions">
+            <button class="btn-primary" onclick="editCurrentArcher()">✏️ Edit Profile</button>
+            <button class="btn-danger" onclick="deleteCurrentArcher()">🗑️ Delete</button>
+          </div>
+        </section>
+
+        <!-- Tabs -->
+        <section class="tabs card">
+          <!-- Tab titles -->
+          <div class="tab-list" role="tablist" aria-label="Archer tabs">
+            <button class="tab active" role="tab" data-tab="overall" onclick="showTab('overall')">Overall</button>
+            <button class="tab" role="tab" data-tab="performance" onclick="showTab('performance')">Performance</button>
+            <button class="tab" role="tab" data-tab="history" onclick="showTab('history')">Match History</button>
+          </div>
+
+          <!-- Tab content (tất cả nằm chung trong .tab-panels) -->
+          <div class="tab-panels">
+            <!-- Overall -->
+            <div id="tab-overall" class="tab-panel active">
+              <div class="grid-2">
+                <div>
+                  <h3>Profile</h3>
+                  <table class="detail-table">
+                    <tr><th>ID</th><td id="fieldId">—</td></tr>
+                    <tr><th>First name</th><td id="fieldFirst">—</td></tr>
+                    <tr><th>Last name</th><td id="fieldLast">—</td></tr>
+                    <tr><th>DOB</th><td id="fieldDob">—</td></tr>
+                    <tr><th>Gender</th><td id="fieldGender">—</td></tr>
+                    <tr><th>Default equipment</th><td id="fieldEquipment">—</td></tr>
+                    <tr><th>Club</th><td id="fieldClub">—</td></tr>
+                    <tr><th>Create at</th><td id="createAt">—</td></tr>
+                    <tr><th>Last update</th><td id="lastUpdate">—</td></tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Performance -->
+            <div id="tab-performance" class="tab-panel">
+              <div class="chart-card">
+                <div class="grid-2">
+                  <div>
+                    <table class="detail-table">
+                      <tr><th>ID</th><td>—</td></tr>
+                      <tr><th>Score</th><td>—</td></tr>
+                      <tr><th>Best score</th><td>—</td></tr>
+                      <tr><th>Average score</th><td>—</td></tr>
+                      <tr><th>Total X's</th><td>—</td></tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- History -->
+            <div id="tab-history" class="tab-panel">
+              <div class="chart-card">
+                <div class="grid-2">
+                  <div>
+                    <table class="detail-table">
+                      <tr><th>Competition ID</th><td>—</td></tr>
+                      <tr><th>Record at</th><td>—</td></tr>
+                      <tr><th>Round ID</th><td>—</td></tr>
+                      <tr><th>ID</th><td>—</td></tr>
+                      <tr><th>Round snapshot</th><td>—</td></tr>
+                      <tr><th>Total</th><td>—</td></tr>
+                      <tr><th>X's count</th><td>—</td></tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer>
+          Demo data stored in <code>localStorage</code> key <strong>archery_demo_data_v1</strong>
+        </footer>
+      </main>
+    </div>
+
+    <script src="javascript/archer-detail.js"></script>
+  </body>
+</html>
