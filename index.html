@@ -9,46 +9,17 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <!-- local stylesheet -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style/style.css" />
 </head>
 <body>
   <div class="container">
+    <div id="header-placeholder"></div>
     <header class="topbar">
-      <div class="brand">
-        <div class="logo">
-            <img src="images\archer_logo.jpg" alt="Archery Score System logo" class="logo-img" />
-        </div>
-
-        <div class="title">
-          <h1>Archery Score System</h1>
-          <p>Competition & Training Management</p>
-        </div>
-      </div>
-
       <div class="controls" style="margin-left:auto;">
         <button class="btn" id="resetBtn" title="Reset sample data">Reset sample data</button>
         <button class="btn primary" id="exportBtn" title="Export data as JSON">Export</button>
       </div>
     </header>
-
-    <!-- Navigation -->
-    <nav class="nav">
-        <a href="index.html" class="active">
-            <span>📊</span> Dashboard
-        </a>
-        <a href="archers.html">
-            <span>🏹</span> Archers
-        </a>
-        <a href="matches.html">
-            <span>⚔️</span> Matches
-        </a>
-        <a href="statistics.html">
-            <span>📈</span> Statistics
-        </a>
-        <a href="settings.html">
-            <span>⚙️</span> Settings
-        </a>
-    </nav>
 
     <main class="dashboard" role="main">
       <h2>Dashboard</h2>
@@ -109,6 +80,7 @@
       <footer>Demo data stored in <code>localStorage</code> key <strong>archery_demo_data_v1</strong></footer>
     </main>
   </div>
+  <script src="javascript\layout.js"></script>
 
   <!-- main script -->
   <script src="javascript\main.js"></script>
