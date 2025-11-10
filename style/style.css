@@ -657,3 +657,160 @@ header.topbar {
         transform: translateY(0);
     }
 }
+
+/* ========== UTILITIES ========== */
+.text-center { text-align: center !important; }
+.archers-table th.text-center, .archers-table td.text-center { text-align: center; }
+.archers-table th.text-center, .archers-table td.text-center { text-align: center; }
+
+/* ========== ARCHER DETAIL PAGE ========== */
+.archer-detail-page { padding: 2rem; max-width: 1200px; margin: 0 auto; font-family: "Inter", sans-serif; }
+
+/* ---- Back Button ---- */
+.btn-back { padding: 0.6rem 1.2rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-back:hover { background: #e5e7eb; transform: translateX(-3px); }
+
+/* ---- Profile Header ---- */
+.profile-header { background: #fff; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 2rem; }
+.profile-avatar-large { width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg,#f59e0b,#d97706); color:#fff; font-size:2.5rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.profile-info h1 { margin: 0 0 0.4rem; color:#111827; font-size:1.8rem; }
+.profile-meta { color:#6b7280; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem; }
+.meta-divider { color:#d1d5db; }
+.profile-actions { margin-left:auto; display:flex; flex-direction:column; gap:0.5rem; }
+.btn-primary,.btn-danger { padding:0.6rem 1.2rem; border:none; border-radius:8px; font-weight:600; cursor:pointer; transition:0.2s; }
+.btn-primary { background:#446cff; color:#fff; }
+.btn-primary:hover { background:#3155d0; }
+.btn-danger { background:#ef4444; color:#fff; }
+.btn-danger:hover { background:#dc2626; }
+
+/* ---- Tabs Container ---- */
+.tabs.card { background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05); padding:0; }
+
+/* ---- Tab List ---- */
+.tabs.card {
+  display: block; width: 100%; grid-column: 1 / -1; align-self: stretch; margin-bottom: 1rem;
+}
+.tab { background:none; border:none; font-weight:600; color:#6b7280; font-size:1rem; padding:0.75rem 1.25rem; cursor:pointer; transition:0.2s; border-radius:6px 6px 0 0; }
+.tab:hover { color:#111827; }
+.tab.active { color:#111827; border-bottom:3px solid #446cff; }
+
+/* ---- Tab Panels ---- */
+.tab-panels { width: 100%; display: block; }
+.tab-panel { display:none; width: 100%;; }
+.tab-panel.active { display:block; }
+@keyframes fadeIn { from {opacity:0;transform:translateY(10px);} to {opacity:1;transform:translateY(0);} }
+
+/* ---- Tables ---- */
+.detail-table { width:100%; border-collapse:collapse; background:#ffffff; border: 1px solid #e6edf3; font-size:0.95rem; color:#374151; }
+.detail-table th { text-align:left; padding:0.4rem 0.6rem; width:200px; color:#6b7280; font-weight:500; }
+.detail-table td { padding:0.4rem 0.6rem; font-weight:600; color:#111827; border-bottom:1px solid #f3f4f6; }
+
+/* ---- Utilities ---- */
+.grid-2 { display:grid; grid-template-columns:1fr; gap:1.5rem; }
+.chart-card { background:#fafafa; padding:1rem; border-radius:8px; box-shadow:inset 0 0 0 1px #f3f4f6; }
+footer { text-align:center; margin-top:2rem; font-size:0.85rem; color:#9ca3af; }
+
+
+/* Base boxed card for tables */
+.table-card,
+.match-table-wrapper,
+.detail-table {
+  background: #ffffff;
+  border: 2px solid #000000;  
+  border-radius: 8px;
+  border-radius: 10px;
+  border-color: #9ca3af;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.03);
+}
+
+/* Ensure detail-table uses the boxed style */
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  color: #374151;
+  padding: 8px;
+}
+
+/* Head cell styling */
+.detail-table th,
+.match-table thead th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  color: #6b7280;
+  font-weight: 800;
+  background: transparent;
+  border-bottom: 1px solid #000000;
+  border-color: #9ca3af;
+}
+
+/* Body cell styling and row separators */
+.detail-table td,
+.match-table tbody td {
+  padding: 0.6rem 0.75rem;
+  color: #28334b;
+  font-weight: 700;
+  border-bottom: 1px solid #000000;
+  border-color: #9ca3af;
+}
+
+/* Match table specific */
+.match-table-wrapper {
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+
+
+.match-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Make stat cards visually boxed as well */
+.performance-summary{display: flex;
+  gap: 0;                        
+  border: 1px solid #e6edf3;     
+  border-radius: 10px;           
+  overflow: hidden;              
+  background: #fff;} .stat-card.small,
+.stats-row .stat-card.small {
+  background: #fff;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  border-color: #9ca3af;
+  padding: 0.6rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+
+.match-row {
+  background: #fff;
+  border: 1px solid #000000;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+
+@media (max-width: 900px) {
+  .detail-table th, .match-table thead th { padding: 0.45rem 0.5rem; }
+  .detail-table td, .match-table tbody td { padding: 0.45rem 0.5rem; }
+  .match-table-wrapper { padding: 10px; }
+}
+
+
+.performance-summary .stat-label,
+#tab-performance .stat-label {
+  font-weight: 700;       
+  color: #111827;         
+  font-size: 0.9rem;
+}
+
+.performance-summary .stat-value,
+#tab-performance .stat-value {
+  font-weight: 400;      
+  color: var(--primary, #000000);
+}
