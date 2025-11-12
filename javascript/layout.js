@@ -67,6 +67,6 @@ function logout() {
     if (confirm("Are you sure you want to logout?")) {
         localStorage.removeItem("archery_auth_user");
         localStorage.removeItem("archery_demo_data_v1"); // Xóa cả data demo
-        window.location.href = '/home.html';
+        window.location.href = '/index.html';
     }
 }
