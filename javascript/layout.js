@@ -9,10 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!user) {
         // Đảm bảo không chuyển hướng nếu chúng ta *đang* ở trang login/signup
         // (Mặc dù các trang đó không nên tải file này)
-        if(window.location.pathname.includes('login.html') || window.location.pathname.includes('signup.html')) {
+        if(window.location.pathname.includes('/pages/login.html') || window.location.pathname.includes('/pages/signup.html')) {
             return;
         }
-        window.location.href = 'login.html';
+        window.location.href = '/pages/login.html';
         return; // Dừng thực thi phần còn lại của script
     }
     // === KẾT THÚC BẢO VỆ ===
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadHeader() {
-    fetch('header.html')
+    fetch('/header.html')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
@@ -48,7 +48,7 @@ function setActiveNavigation() {
     
     // Sửa logic: index.html là trang dashboard
     const pageName = (currentPage === '' || currentPage === '/') 
-        ? 'index.html' // Trang dashboard là index.html
+        ? '/pages/dashboard.html' // Trang dashboard là index.html
         : currentPage;
 
     const navLinks = document.querySelectorAll('nav.nav a');
@@ -67,6 +67,6 @@ function logout() {
     if (confirm("Are you sure you want to logout?")) {
         localStorage.removeItem("archery_auth_user");
         localStorage.removeItem("archery_demo_data_v1"); // Xóa cả data demo
-        window.location.href = 'login.html';
+        window.location.href = '/home.html';
     }
 }

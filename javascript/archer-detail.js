@@ -217,12 +217,12 @@ function renderHistoryPanel(archerId, data) {
 
 // -------------------- Actions --------------------
 function goBack() {
-  window.location.href = "archers.html";
+  window.location.href = "/pages/archers.html";
 }
 function editCurrentArcher() {
   if (!currentArcher) return;
   // navigate to archers page with edit query param (existing edit modal handler can detect this)
-  window.location.href = `archers.html?edit=${encodeURIComponent(currentArcher.id)}`;
+  window.location.href = `/pages/archers.html?edit=${encodeURIComponent(currentArcher.id)}`;
 }
 function deleteCurrentArcher() {
   if (!currentArcher) return;
@@ -233,7 +233,7 @@ function deleteCurrentArcher() {
   data.scores = (data.scores || []).filter(s => s.archerId !== currentArcher.id);
   saveData(data);
   alert("Archer deleted.");
-  window.location.href = "archers.html";
+  window.location.href = "/pages/archers.html";
 }
 
 // -------------------- Tabs --------------------
@@ -247,19 +247,19 @@ function renderArcherProfile() {
   const id = getArcherIdFromURL();
   if (!id) {
     alert("No archer id provided.");
-    window.location.href = "archers.html";
+    window.location.href = "/pages/archers.html";
     return;
   }
   const data = loadData();
   if (!data) {
     alert("No data in storage.");
-    window.location.href = "archers.html";
+    window.location.href = "/pages/archers.html";
     return;
   }
   const archer = (data.archers || []).find(a => a.id === id);
   if (!archer) {
     alert("Archer not found.");
-    window.location.href = "archers.html";
+    window.location.href = "/pages/archers.html";
     return;
   }
   currentArcher = archer;

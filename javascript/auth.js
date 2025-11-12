@@ -66,7 +66,7 @@ function handleSignup(event) {
     localStorage.setItem(AUTH_KEY, JSON.stringify(newUser));
     
     // Chuyển hướng đến dashboard
-    window.location.href = "index.html"; 
+    window.location.href = "/pages/dashboard.html"; 
 }
 
 // Xử lý đăng nhập
@@ -101,5 +101,5 @@ function handleLogin(event) {
     localStorage.setItem(AUTH_KEY, JSON.stringify(user));
     
     // Chuyển hướng
-    window.location.href = "index.html";
+    window.location.href = "/pages/dashboard.html";
 }

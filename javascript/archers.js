@@ -476,5 +476,5 @@ window.addEventListener("beforeunload", () => {
 
 // View archer detail page
 function viewArcherDetail(id){
-  window.location.href = `archer-detail.html?id=${id}`;
+  window.location.href = `/pages/archer-detail.html?id=${id}`;
 }
