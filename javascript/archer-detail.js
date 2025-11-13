@@ -219,10 +219,99 @@ function renderHistoryPanel(archerId, data) {
 function goBack() {
   window.location.href = "/pages/archers.html";
 }
+/** Popup logic **/
 function editCurrentArcher() {
   if (!currentArcher) return;
-  // navigate to archers page with edit query param (existing edit modal handler can detect this)
-  window.location.href = `/pages/archers.html?edit=${encodeURIComponent(currentArcher.id)}`;
+  
+  
+  document.getElementById('editId').value = currentArcher.id || '';
+  document.getElementById('editFirst').value = currentArcher.first || '';
+  document.getElementById('editLast').value = currentArcher.last || '';
+  document.getElementById('editDob').value = currentArcher.dob ? currentArcher.dob.slice(0,10) : '';
+  document.getElementById('editGender').value = currentArcher.gender || '';
+  document.getElementById('editEquipment').value = currentArcher.defaultEquipment || '';
+  document.getElementById('editClub').value = currentArcher.club || '';
+  // show age
+  calcEditAge();
+
+  // Open modal with flex display (important for centering)
+  const modal = document.getElementById('editArcherModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden'; // Prevent background scroll
+  
+  // Focus first input
+  setTimeout(() => {
+    document.getElementById('editFirst').focus();
+  }, 100);
+}
+
+function closeEditArcherModal() {
+  document.getElementById('editArcherModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+/** calculate age for DOB **/
+function calcEditAge() {
+  const dobVal = document.getElementById('editDob').value;
+  const age = calculateAge(dobVal);
+  document.getElementById('editAge').textContent = dobVal ? 'Age: ' + (age || '-') + ' years old' : '';
+}
+document.getElementById('editDob').addEventListener('input', calcEditAge);
+
+/** update form **/
+function updateArcher(e) {
+  e.preventDefault();
+  if (!currentArcher) return;
+  const data = loadData();
+  if (!data) return;
+  const archerList = data.archers || [];
+  const idx = archerList.findIndex(a => a.id === currentArcher.id);
+  if (idx < 0) return;
+
+  // take data
+  const updated = {
+    ...currentArcher,
+    id: document.getElementById('editId').value,
+    first: document.getElementById('editFirst').value,
+    last: document.getElementById('editLast').value,
+    dob: document.getElementById('editDob').value,
+    gender: document.getElementById('editGender').value,
+    defaultEquipment: document.getElementById('editEquipment').value,
+    club: document.getElementById('editClub').value,
+    updatedAt: new Date().toISOString()
+  };
+
+  // check required
+  if (!updated.id || !updated.first || !updated.last || !updated.dob || !updated.gender) {
+    alert("Please fill all required fields.");
+    return;
+  }
+
+  
+  if (updated.id !== currentArcher.id) {
+    
+    const exists = archerList.find(a => a.id === updated.id);
+    if (exists) {
+      alert("ID already exists."); return;
+    }
+    
+    if (data.scores) {
+      data.scores.forEach(s => {
+        if (s.archerId === currentArcher.id) s.archerId = updated.id;
+      });
+    }
+  }
+
+  // Update list
+  archerList[idx] = updated;
+  saveData({ ...data, archers: archerList });
+
+  //
+  currentArcher = updated;
+  renderHeader(updated);
+  renderOverallPanel(updated, data);
+  closeEditArcherModal();
+  alert("Updated!");
 }
 function deleteCurrentArcher() {
   if (!currentArcher) return;
