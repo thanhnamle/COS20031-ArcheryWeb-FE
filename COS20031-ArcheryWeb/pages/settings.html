@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archery Score System — Settings</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <link rel="stylesheet" href="/style/style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <div id="header-placeholder"></div>
+
+        <main class="settings-page" role="main">
+            <div class="page-header">
+                <div>
+                    <h2>System Settings</h2>
+                    <p class="sub">Manage core system data like rounds and equipment</p>
+                </div>
+            </div>
+
+            <section class="table-section settings-section">
+                <header class="table-header">
+                    <h2>Equipment Types</h2>
+                    <nav class="table-controls">
+                         <button class="btn-primary small" onclick="showEquipmentTypeModal()">
+                            <span>+</span> Add Type
+                        </button>
+                    </nav>
+                </header>
+                <article class="table-wrapper">
+                    <table class="settings-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipmentTypesTableBody">
+                            </tbody>
+                    </table>
+                </article>
+            </section>
+
+            <section class="table-section settings-section">
+                <header class="table-header">
+                    <h2>Rounds</h2>
+                    <nav class="table-controls">
+                         <button class="btn-primary small" onclick="showRoundModal()">
+                            <span>+</span> Add Round
+                        </button>
+                    </nav>
+                </header>
+                <article class="table-wrapper">
+                    <table class="settings-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roundsTableBody">
+                            </tbody>
+                    </table>
+                </article>
+            </section>
+
+            <footer>Demo data stored in <code>localStorage</code> key <strong>archery_demo_data_v1</strong></footer>
+        </main>
+
+        <aside id="equipmentTypeModal" class="modal" style="display: none;">
+            <div class="modal-overlay" onclick="closeModal('equipmentTypeModal')"></div>
+            <section class="modal-content">
+                <header class="modal-header">
+                    <h2 id="equipmentTypeModalTitle">Add Equipment Type</h2>
+                    <button class="modal-close" onclick="closeModal('equipmentTypeModal')" aria-label="Close modal">×</button>
+                </header>
+                <article class="modal-body">
+                    <form id="equipmentTypeForm">
+                        <input type="hidden" id="equipmentTypeId" value="">
+                        <div class="form-group">
+                            <label for="equipmentTypeName">Type Name *</label>
+                            <input type="text" id="equipmentTypeName" required placeholder="e.g., Recurve">
+                            <span class="form-error" id="equipmentTypeNameError"></span>
+                        </div>
+                    </form>
+                </article>
+                <footer class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeModal('equipmentTypeModal')">Cancel</button>
+                    <button type="submit" class="btn-primary" onclick="saveEquipmentType(event)">
+                        <span id="equipmentTypeSaveButtonText">Add Type</span>
+                    </button>
+                </footer>
+            </section>
+        </aside>
+
+        <aside id="roundModal" class="modal" style="display: none;">
+            <div class="modal-overlay" onclick="closeModal('roundModal')"></div>
+            <section class="modal-content">
+                <header class="modal-header">
+                    <h2 id="roundModalTitle">Add Round</h2>
+                    <button class="modal-close" onclick="closeModal('roundModal')" aria-label="Close modal">×</button>
+                </header>
+                <article class="modal-body">
+                    <form id="roundForm">
+                        <input type="hidden" id="roundId" value="">
+                        <div class="form-group">
+                            <label for="roundName">Round Name *</label>
+                            <input type="text" id="roundName" required placeholder="e.g., WA 720">
+                            <span class="form-error" id="roundNameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="roundDescription">Description</label>
+                            <input type="text" id="roundDescription" placeholder="e.g., 72 arrows, 4 distances">
+                            <span class="form-error" id="roundDescriptionError"></span>
+                        </div>
+                        </form>
+                </article>
+                <footer class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeModal('roundModal')">Cancel</button>
+                    <button type="submit" class="btn-primary" onclick="saveRound(event)">
+                        <span id="roundSaveButtonText">Add Round</span>
+                    </button>
+                </footer>
+            </section>
+        </aside>
+
+        <aside id="toast" class="toast" style="display: none;"></aside>
+    </div>
+    <script src="/javascript/layout.js"></script>
+
+    <script src="/javascript/settings.js"></script>
+</body>
+</html>

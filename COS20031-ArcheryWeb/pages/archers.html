@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archery Score System — Archers</title>
+    <link rel="stylesheet" href="/style/tyle.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div class="container">
+        <div id="header-placeholder"></div>
+
+        <main class="archers-page" role="main">
+            <div class="page-header">
+                <div>
+                    <h2>Archers Management</h2>
+                    <p class="sub">Manage archer profiles and information</p>
+                </div>
+                <button class="btn-primary" onclick="showAddArcherModal()">
+                    <span>+</span> Add Archer
+                </button>
+                <button class="btn-primary" onclick="window.location.href='/pages/approve-score.html'" style="background: #10b981;">
+                    <span>📝</span> Add Score
+                </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <section class="cards" aria-label="Key metrics">
+                <div class="card">
+                    <div>
+                        <div class="meta">Total Archers</div>
+                        <div class="value" id="totalArchers">0</div>
+                    </div>
+                    <div class="icon">👥</div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="meta">Male Count</div>
+                        <div class="value" id="maleCount">0</div>
+                    </div>
+                    <div class="icon">👨🏻</div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="meta">Female Count</div>
+                        <div class="value" id="femaleCount">0</div>
+                    </div>
+                    <div class="icon">👩🏻</div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="meta">Average Age</div>
+                        <div class="value" id="avgAge">0</div>
+                    </div>
+                    <div class="icon">🧍🏻</div>
+                </div>
+            </section>
+
+            <!-- Leaderboard Section - Moved up -->
+            <section class="table-section">
+                <header class="table-header">
+                    <h2>🏆 Leaderboard</h2>
+                    <nav class="table-controls">
+                        <input
+                            type="text"
+                            id="leaderboardSearchInput"
+                            placeholder="Search archers..."
+                            class="search-input"
+                            aria-label="Search leaderboard"
+                        >
+                        <select id="competitionFilter" class="filter-select" aria-label="Filter by competition">
+                            <option value="">All Competitions</option>
+                        </select>
+                        <select id="leaderboardGenderFilter" class="filter-select" aria-label="Filter by gender">
+                            <option value="">All Genders</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+                    </nav>
+                </header>
+
+                <article class="table-wrapper">
+                    <table class="archers-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Avg Score</th>
+                                <th scope="col">Best Score</th>
+                                <th scope="col">Total Score</th>
+                                <th scope="col">Matches</th>
+                                <th scope="col">Total X's</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardTableBody">
+                            <!-- Rows will be rendered here -->
+                        </tbody>
+                    </table>
+
+                    <aside id="leaderboardEmptyState" class="empty-state" style="display: none;">
+                        <p>No scores found. Start recording scores to see the leaderboard!</p>
+                    </aside>
+                </article>
+            </section>
+
+            <!-- Archers List Section -->
+            <section class="table-section">
+                <header class="table-header">
+                    <h2>Archers List</h2>
+                    <nav class="table-controls">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Search archers..."
+                            class="search-input"
+                            aria-label="Search archers"
+                        >
+                        <select id="genderFilter" class="filter-select" aria-label="Filter by gender">
+                            <option value="">All Genders</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+                    </nav>
+                </header>
+
+                <article class="table-wrapper">
+                    <table class="archers-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Date of Birth</th>
+                                <th scope="col">Scores</th>
+                                <th scope="col">Best Score</th>
+                                <th scope="col">Avg Score</th>
+                                <th scope="col">Total X's</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="archersTableBody">
+                            <!-- Rows will be rendered here -->
+                        </tbody>
+                    </table>
+
+                    <aside id="emptyState" class="empty-state" style="display: none;">
+                        <p>No archers found. Click "Add Archer" to get started!</p>
+                    </aside>
+                </article>
+            </section>
+
+            <footer>Demo data stored in <code>localStorage</code> key <strong>archery_demo_data_v1</strong></footer>
+        </main>
+
+        <!-- Add/Edit Archer Modal -->
+        <aside id="archerModal" class="modal" style="display: none;">
+            <div class="modal-overlay" onclick="closeArcherModal()"></div>
+            <section class="modal-content">
+                <header class="modal-header">
+                    <h2 id="modalTitle">Add New Archer</h2>
+                    <button class="modal-close" onclick="closeArcherModal()" aria-label="Close modal">
+                        ×
+                    </button>
+                </header>
+
+                <article class="modal-body">
+                    <form id="archerForm">
+                        <input type="hidden" id="archerId" value="">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input 
+                                    type="text"
+                                    id="firstName"
+                                    required
+                                    placeholder="Enter first name"
+                                    autocomplete="given-name"
+                                >
+                                <span class="form-error" id="firstNameError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    required
+                                    placeholder="Enter last name"
+                                    autocomplete="family-name"
+                                >
+                                <span class="form-error" id="lastNameError"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dob">Date of Birth *</label>
+                                <input
+                                    type="date"
+                                    id="dob"
+                                    required
+                                    max="2020-12-31"
+                                    autocomplete="bday"
+                                >
+                                <span class="form-error" id="dobError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender">Gender *</label>
+                                <select id="gender" required>
+                                    <option value="">Select gender...</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                                <span class="form-error" id="genderError"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-info">
+                            <p id="ageDisplay" class="age-info"></p>
+                        </div>
+                    </form>
+                </article>
+
+                <footer class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeArcherModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary" onclick="saveArcher(event)">
+                        <span id="saveButtonText">Add Archer</span>
+                    </button>
+                </footer>
+            </section>
+        </aside>
+
+        <!-- Toast Notification -->
+        <aside id="toast" class="toast" style="display: none;"></aside>
+    </div>
+
+    <script src="/javascript/layout.js"></script>
+    <script src="/javascript/archers.js"></script>
+</body>
+</html>
