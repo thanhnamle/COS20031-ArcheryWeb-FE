@@ -114,7 +114,7 @@ footer{ color:var(--muted); font-size:13px; text-align:center; margin-top:18px; 
 .btn-delete:hover { background: #fecaca; transform: scale(1.1); }
 
 /* MODAL */
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; align-items: center; justify-content: center; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; align-items: center; justify-content: center;}
 .modal-overlay { position: absolute; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); }
 .modal-content { position: relative; background: white; border-radius: 16px; max-width: 600px; width: 90%; max-height: 90vh; overflow: hidden; }
 .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid #e5e7eb; }
@@ -814,3 +814,226 @@ footer { text-align:center; margin-top:2rem; font-size:0.85rem; color:#9ca3af; }
   font-weight: 400;      
   color: var(--primary, #000000);
 }
+
+/* ======================== */
+/* Add Score Page Styles */
+/* ======================== */
+
+.add-score-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.score-header {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.score-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+}
+
+.score-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  opacity: 0.95;
+  flex-wrap: wrap;
+}
+
+.selection-form.card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.selection-form h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #111827;
+  font-size: 1.25rem;
+}
+
+/* Score Entry Table */
+.score-table-section.card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.score-table-section h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #111827;
+  font-size: 1.25rem;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.score-entry-table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+  background: white;
+  border: 2px solid #9ca3af;
+  border-radius: 10px;
+}
+
+.score-entry-table thead {
+  background: #f9fafb;
+}
+
+.score-entry-table th {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #374151;
+  border: 1px solid #9ca3af;
+}
+
+.score-entry-table td {
+  padding: 0.5rem;
+  text-align: center;
+  border: 1px solid #9ca3af;
+  background: white;
+}
+
+.score-input {
+  width: 70px;
+  padding: 0.5rem;
+  text-align: center;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: white;
+}
+
+.score-input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.disabled-cell {
+  background: #f3f4f6;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.round-total {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #2563eb;
+}
+
+.total-row {
+  background: #f9fafb;
+  font-weight: 700;
+}
+
+.total-row td {
+  padding: 1rem !important;
+  font-size: 1.2rem;
+}
+
+/* Action Buttons */
+.action-section {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.btn-success {
+  padding: 0.75rem 2rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-success:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  padding: 0.75rem 2rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .add-score-page {
+    padding: 1rem;
+  }
+  
+  .score-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .score-meta {
+    font-size: 0.85rem;
+  }
+  
+  .score-entry-table {
+    font-size: 0.75rem;
+    min-width: 600px;
+  }
+  
+  .score-input {
+    width: 50px;
+    padding: 0.35rem;
+    font-size: 0.9rem;
+  }
+  
+  .action-section {
+    flex-direction: column;
+  }
+  
+  .btn-success,
+  .btn-danger,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
