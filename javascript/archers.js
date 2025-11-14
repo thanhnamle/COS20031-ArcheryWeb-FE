@@ -224,6 +224,10 @@ function validateArcherForm(formData){
   if(!formData.lastName || formData.lastName.trim().length < 2){
     errors.lastName = "Last name must be at least 2 characters";
   }
+
+  if(!formData.email || !formData.email.includes('@')){
+    errors.email = "A valid email is required";
+  }
   
   if(!formData.dob){
     errors.dob = "Date of birth is required";
@@ -261,6 +265,7 @@ function saveArcher(event){
     id: document.getElementById('archerId').value,
     firstName: document.getElementById('firstName').value.trim(),
     lastName: document.getElementById('lastName').value.trim(),
+    email: document.getElementById('email').value.trim().toLowerCase(),
     dob: document.getElementById('dob').value,
     gender: document.getElementById('gender').value
   };
@@ -287,6 +292,7 @@ function saveArcher(event){
         ...data.archers[index],
         first: formData.firstName,
         last: formData.lastName,
+        email: formData.email,
         dob: formData.dob,
         gender: formData.gender,
         updatedAt: new Date().toISOString()
@@ -329,6 +335,7 @@ function editArcher(id){
   document.getElementById('archerId').value = archer.id;
   document.getElementById('firstName').value = archer.first;
   document.getElementById('lastName').value = archer.last;
+  document.getElementById('email').value = archer.email || '';
   document.getElementById('dob').value = archer.dob;
   document.getElementById('gender').value = archer.gender;
   

@@ -23,6 +23,16 @@ function saveData(data){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); 
 }
 
+function getCurrentUser() {
+    const userRaw = localStorage.getItem("archery_auth_user");
+    if (!userRaw) return { role: 'archer', archerId: null }; // Mặc định an toàn
+    const user = JSON.parse(userRaw);
+    return {
+        role: user.role || 'archer',
+        archerId: user.archerId || null
+    };
+}
+
 // --- Render Functions ---
 
 function renderStats(){
@@ -51,6 +61,8 @@ function renderScoresTable(filters = {}){
   const tbody = document.getElementById('scoresTableBody');
   const emptyState = document.getElementById('emptyState');
   
+  const currentUser = getCurrentUser();
+
   if(!tbody) return;
   
   let scores = data.scores.slice();
@@ -99,6 +111,21 @@ function renderScoresTable(filters = {}){
     const competition = data.competitions.find(c => c.id === score.competitionId);
     const dateFormatted = new Date(score.recordedAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     
+    // TẠO NÚT ACTIONS DỰA TRÊN VAI TRÒ
+    let actionButtonsHTML = '';
+    if (currentUser.role === 'admin') {
+        actionButtonsHTML = `
+          <div class="action-buttons">
+            <button class="btn-icon btn-edit" onclick="editScore('${score.id}')" title="Edit">
+              ✏️
+            </button>
+            <button class="btn-icon btn-delete" onclick="deleteScore('${score.id}')" title="Delete">
+              🗑️
+            </button>
+          </div>
+        `;
+    }
+
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>
@@ -169,11 +196,24 @@ function showAddScoreModal(){
   const archerSelect = document.getElementById('archerId');
   const roundSelect = document.getElementById('roundId');
   const compSelect = document.getElementById('competitionId');
+
+  const currentUser = getCurrentUser();
   
   archerSelect.innerHTML = '<option value="">Select archer...</option>';
-  data.archers.sort((a,b) => a.first.localeCompare(b.first)).forEach(a => {
-    archerSelect.innerHTML += `<option value="${a.id}">${a.first} ${a.last}</option>`;
-  });
+  if (currentUser.role === 'admin') {
+      // Admin: Tải tất cả cung thủ
+      data.archers.sort((a,b) => a.first.localeCompare(b.first)).forEach(a => {
+        archerSelect.innerHTML += `<option value="${a.id}">${a.first} ${a.last}</option>`;
+      });
+      archerSelect.disabled = false;
+  } else {
+      // Archer: Chỉ tải chính họ và khóa lại
+      const myProfile = data.archers.find(a => a.id === currentUser.archerId);
+      if (myProfile) {
+          archerSelect.innerHTML = `<option value="${myProfile.id}" selected>${myProfile.first} ${myProfile.last}</option>`;
+      }
+      archerSelect.disabled = true;
+  }
   
   roundSelect.innerHTML = '<option value="">Select round...</option>';
   data.rounds.forEach(r => {
@@ -187,6 +227,19 @@ function showAddScoreModal(){
   
   // Set default date
   document.getElementById('recordedAt').value = new Date().toISOString().slice(0, 16);
+
+  const approvedCheckbox = document.getElementById('isApproved');
+  const approvedLabel = document.querySelector('label[for="isApproved"]');
+  
+  if (currentUser.role === 'admin') {
+      approvedCheckbox.style.display = 'inline-block';
+      if (approvedLabel) approvedLabel.style.display = 'flex';
+  } else {
+      // Ẩn checkbox "Approved" nếu là Archer
+      approvedCheckbox.checked = false;
+      approvedCheckbox.style.display = 'none';
+      if (approvedLabel) approvedLabel.style.display = 'none';
+  }
 
   // Show modal
   modal.style.display = 'flex';
@@ -242,6 +295,8 @@ function saveScore(event){
   const data = loadData();
   if(!data) return;
 
+  const currentUser = getCurrentUser();
+
   // Get form data
   const formData = {
     id: document.getElementById('scoreId').value,
@@ -251,7 +306,9 @@ function saveScore(event){
     total: parseInt(document.getElementById('total').value, 10),
     xCount: parseInt(document.getElementById('xCount').value, 10),
     recordedAt: document.getElementById('recordedAt').value,
-    isApproved: document.getElementById('isApproved').checked
+    isApproved: (currentUser.role === 'admin') 
+                    ? document.getElementById('isApproved').checked 
+                    : false
   };
   
   // Validate
@@ -297,6 +354,11 @@ function saveScore(event){
 }
 
 function editScore(id){
+  const currentUser = getCurrentUser();
+  if (currentUser.role !== 'admin') {
+      showToast("Only admins can edit scores.", "error");
+      return;
+  }
   const data = loadData();
   const score = data.scores.find(s => s.id === id);
   
@@ -316,7 +378,9 @@ function editScore(id){
   document.getElementById('total').value = score.total;
   document.getElementById('xCount').value = score.xCount;
   document.getElementById('recordedAt').value = score.recordedAt.slice(0, 16);
-  document.getElementById('isApproved').checked = score.isApproved;
+  document.getElementById('isApproved').style.display = 'inline-block';
+  const approvedLabel = document.querySelector('label[for="isApproved"]');
+  if (approvedLabel) approvedLabel.style.display = 'flex';
   
   // Update modal title
   document.getElementById('modalTitle').textContent = 'Edit Score';
