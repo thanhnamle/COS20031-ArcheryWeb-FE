@@ -165,6 +165,130 @@ function renderArchersTable(filters = {}){
   });
 }
 
+// Render Leaderboard with same UI style as Archers List
+function renderLeaderboardTable(filters = {}) {
+  const data = loadData();
+  if (!data || !data.archers || !data.scores) return;
+  
+  const tbody = document.getElementById('leaderboardTableBody');
+  const emptyState = document.getElementById('leaderboardEmptyState');
+  
+  if(!tbody) return;
+  
+  let archerStats = [];
+  
+  data.archers.forEach(a => {
+    // Filter scores by competition if selected
+    let scores = data.scores.filter(s => s.archerId === a.id);
+    
+    if(filters.competition){
+      scores = scores.filter(s => s.competitionId === filters.competition);
+    }
+    
+    if (scores.length === 0) return;
+    
+    // Apply gender filter
+    if(filters.gender && a.gender !== filters.gender) return;
+    
+    const totalScore = scores.reduce((sum, s) => sum + (s.total || 0), 0);
+    const bestScore = Math.max(...scores.map(s => s.total || 0));
+    const avgScore = Math.round(totalScore / scores.length);
+    const totalXs = scores.reduce((sum, s) => sum + (s.xCount || 0), 0);
+    
+    archerStats.push({
+      id: a.id,
+      first: a.first,
+      last: a.last,
+      gender: a.gender,
+      totalScore,
+      bestScore,
+      avgScore,
+      matches: scores.length,
+      totalXs
+    });
+  });
+
+  // Apply search filter
+  if(filters.search){
+    const searchLower = filters.search.toLowerCase();
+    archerStats = archerStats.filter(a => {
+      const fullName = `${a.first} ${a.last}`.toLowerCase();
+      return fullName.includes(searchLower);
+    });
+  }
+
+  // Sort by total score descending
+  archerStats.sort((a, b) => b.totalScore - a.totalScore);
+
+  // Clear table
+  tbody.innerHTML = '';
+
+  // Show/hide empty state
+  if (archerStats.length === 0) {
+    tbody.closest('table').style.display = 'none';
+    emptyState.style.display = 'block';
+    return;
+  } else {
+    tbody.closest('table').style.display = 'table';
+    emptyState.style.display = 'none';
+  }
+
+  // Render rows - same style as archers table
+  archerStats.forEach((a, i) => {
+    const row = document.createElement('tr');
+    
+    // Add medal emoji for top 3
+    let rankDisplay = i + 1;
+    if(i === 0) rankDisplay = '🥇';
+    else if(i === 1) rankDisplay = '🥈';
+    else if(i === 2) rankDisplay = '🥉';
+    
+    row.innerHTML = `
+      <td class="text-center">${rankDisplay}</td>
+      <td>
+        <div class="archer-name" style="cursor: pointer;" onclick="viewArcherDetail('${a.id}')">
+          <div class="avatar-small">${a.first[0]}${a.last[0]}</div>
+          <strong>${a.first} ${a.last}</strong>
+        </div>
+      </td>
+      <td class="text-center">
+        <span class="gender-badge gender-${a.gender}">
+          ${a.gender === 'M' ? 'Male' : 'Female'}
+        </span>
+      </td>
+      <td class="text-center">${a.avgScore}</td>
+      <td class="text-center">
+        <span class="score-highlight">${a.bestScore}</span>
+      </td>
+      <td class="text-center"><strong>${a.totalScore}</strong></td>
+      <td class="text-center">${a.matches}</td>
+      <td class="text-center">${a.totalXs}</td>
+    `;
+    
+    tbody.appendChild(row);
+  });
+}
+
+// Populate competition filter dropdown
+function populateCompetitionFilter(){
+  const data = loadData();
+  if(!data || !data.competitions) return;
+  
+  const select = document.getElementById('competitionFilter');
+  if(!select) return;
+  
+  // Clear existing options except "All Competitions"
+  select.innerHTML = '<option value="">All Competitions</option>';
+  
+  // Add competition options
+  data.competitions.forEach(comp => {
+    const option = document.createElement('option');
+    option.value = comp.id;
+    option.textContent = comp.name;
+    select.appendChild(option);
+  });
+}
+
 //modal fuction
 
 function showAddArcherModal(){
@@ -422,15 +546,21 @@ function refreshAll(){
     search: document.getElementById('searchInput')?.value || '',
     gender: document.getElementById('genderFilter')?.value || ''
   });
+  renderLeaderboardTable({
+    search: document.getElementById('leaderboardSearchInput')?.value || '',
+    competition: document.getElementById('competitionFilter')?.value || '',
+    gender: document.getElementById('leaderboardGenderFilter')?.value || ''
+  });
 }
 
 //event listener
 
 document.addEventListener("DOMContentLoaded", () => {
   // Initial render
+  populateCompetitionFilter();
   refreshAll();
   
-  // Search input
+  // Archers table search input
   const searchInput = document.getElementById('searchInput');
   if(searchInput){
     searchInput.addEventListener('input', (e) => {
@@ -441,12 +571,48 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   
-  // Gender filter
+  // Archers table gender filter
   const genderFilter = document.getElementById('genderFilter');
   if(genderFilter){
     genderFilter.addEventListener('change', (e) => {
       renderArchersTable({
         search: document.getElementById('searchInput')?.value || '',
+        gender: e.target.value
+      });
+    });
+  }
+  
+  // Leaderboard search input
+  const leaderboardSearchInput = document.getElementById('leaderboardSearchInput');
+  if(leaderboardSearchInput){
+    leaderboardSearchInput.addEventListener('input', (e) => {
+      renderLeaderboardTable({
+        search: e.target.value,
+        competition: document.getElementById('competitionFilter')?.value || '',
+        gender: document.getElementById('leaderboardGenderFilter')?.value || ''
+      });
+    });
+  }
+  
+  // Competition filter
+  const competitionFilter = document.getElementById('competitionFilter');
+  if(competitionFilter){
+    competitionFilter.addEventListener('change', (e) => {
+      renderLeaderboardTable({
+        search: document.getElementById('leaderboardSearchInput')?.value || '',
+        competition: e.target.value,
+        gender: document.getElementById('leaderboardGenderFilter')?.value || ''
+      });
+    });
+  }
+  
+  // Leaderboard gender filter
+  const leaderboardGenderFilter = document.getElementById('leaderboardGenderFilter');
+  if(leaderboardGenderFilter){
+    leaderboardGenderFilter.addEventListener('change', (e) => {
+      renderLeaderboardTable({
+        search: document.getElementById('leaderboardSearchInput')?.value || '',
+        competition: document.getElementById('competitionFilter')?.value || '',
         gender: e.target.value
       });
     });
