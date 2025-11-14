@@ -593,15 +593,35 @@ nav.nav.sidebar-nav a.active {
     border-radius: 8px;
     color: #d1d5db;
 }
+
 #sidebarUserEmail {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    position: relative;  /* For positioning tooltip */
+    cursor: pointer;
 }
+
+#sidebarUserEmail::after {
+    content: attr(title);  /* Use title attr for content */
+    position: absolute;
+    bottom: 100%;  /* Above the name */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2563eb;  /* Blue bg */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+    pointer-events: none;  /* Don't block hover */
+}
+
+#sidebarUserEmail:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
 #sidebarUserRole {
     display: block;
     font-size: 0.75rem;

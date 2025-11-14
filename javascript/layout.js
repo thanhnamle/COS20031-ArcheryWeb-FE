@@ -10,6 +10,7 @@ const ALLOWED_PAGES = {
         '/pages/archer-detail.html',
         '/pages/add-score.html',
         '/pages/approve-score.html',
+        '/pages/matches.html',
         '/pages/equipments.html',
         '/pages/statistics.html',
         '/pages/settings.html'
@@ -17,6 +18,7 @@ const ALLOWED_PAGES = {
     archer: [
         '/pages/dashboard.html',
         '/pages/add-score.html',
+        '/pages/matches.html',
         '/pages/settings.html'
     ]
 };
@@ -36,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     enforcePageAccess(user.role);
-    loadHeader();               // header + sidebar
+    loadHeader();
 });
 
 /* ------------------------------------------------------------------
@@ -122,10 +124,22 @@ function populateSidebarFooter() {
     const user = getCurrentUser();
     if (!user) return;
 
-    const emailEl = document.getElementById('sidebarUserEmail');
+    const nameEl  = document.getElementById('sidebarUserEmail');   // We'll reuse this ID for name
     const roleEl  = document.getElementById('sidebarUserRole');
 
-    if (emailEl) emailEl.textContent = user.email || '—';
+    // 1. Prefer the stored name, otherwise fall back to e-mail
+    const displayName = user.name && user.name.trim()
+        ? user.name.trim()
+        : (user.email || 'User');
+
+    // 2. Show name
+    if (nameEl) {
+        nameEl.textContent = displayName;
+        // 3. Hover = e-mail (always show e-mail, even if name is present)
+        nameEl.title = user.email || '';
+    }
+
+    // 4. Role
     if (roleEl) {
         const r = (user.role || 'archer');
         roleEl.textContent = r.charAt(0).toUpperCase() + r.slice(1);

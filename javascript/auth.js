@@ -151,7 +151,12 @@ function loginUser(email, password) {
     }
 
     // ---- store session (single place) ----
-    const session = { name: user.name, email, role, archerId };
+    const session = {
+        name: user.name,
+        email: user.email,
+        role: role,
+        archerId: archerId
+    };
     localStorage.setItem(AUTH_KEY, JSON.stringify(session));
 
     // ---- go to dashboard ----
