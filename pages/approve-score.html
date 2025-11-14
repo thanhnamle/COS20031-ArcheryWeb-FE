@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archery Score System — Approve Scores</title>
+    <link rel="stylesheet" href="/style/style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header-placeholder"></div>
+
+        <main class="approve-scores-page" role="main">
+            <div class="page-header">
+                <div>
+                    <h2>📋 Approve Scores</h2>
+                    <p class="sub">Review and verify user-submitted scores</p>
+                </div>
+            </div>
+
+            <!-- Pending Scores List -->
+            <section class="table-section">
+                <header class="table-header">
+                    <h3>Pending Scores</h3>
+                    <div class="table-controls">
+                        <select id="statusFilter" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="verified">Verified</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </header>
+
+                <article class="table-wrapper">
+                    <table class="archers-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Archer</th>
+                                <th>Round</th>
+                                <th>Competition</th>
+                                <th>User Score</th>
+                                <th>Admin Score</th>
+                                <th>Status</th>
+                                <th>Submitted</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stagingTableBody">
+                            <!-- Rows rendered by JS -->
+                        </tbody>
+                    </table>
+
+                    <aside id="emptyState" style="display:none;text-align:center;padding:2rem;color:#6b7280;">
+                        <p>No pending scores to review</p>
+                    </aside>
+                </article>
+            </section>
+
+            <!-- Admin Score Entry Section -->
+            <section id="adminScoreEntrySection" style="margin-top:3rem;display:none;">
+                <div style="background:#fff3cd;padding:1rem;border-radius:8px;margin-bottom:1rem;border-left:4px solid #ffc107;">
+                    <h3 style="margin:0 0 0.5rem 0;color:#856404;">
+                        <i class="fas fa-user-shield"></i> Admin Score Entry
+                    </h3>
+                    <p style="margin:0;color:#856404;font-size:0.875rem;">
+                        Select a score below to verify. Admin Score column will update automatically.
+                    </p>
+                </div>
+
+                <!-- Score Information (GIỐNG ADD-SCORE) -->
+                <section class="selection-form card">
+                    <h3>Score Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="selectStagingScore">Select Score to Verify *</label>
+                            <select id="selectStagingScore" required>
+                                <option value="">Select a pending score...</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Score Details Display -->
+                    <div id="selectedScoreInfo" style="display:none;margin-top:1rem;padding:1rem;background:#f0f9ff;border-radius:8px;border-left:4px solid #2563eb;">
+                        <div style="display:flex;gap:2rem;flex-wrap:wrap;">
+                            <div>
+                                <span style="color:#6b7280;font-size:0.875rem;">Archer:</span>
+                                <strong id="infoArcher" style="color:#111827;margin-left:0.5rem;">-</strong>
+                            </div>
+                            <div>
+                                <span style="color:#6b7280;font-size:0.875rem;">Round:</span>
+                                <strong id="infoRound" style="color:#111827;margin-left:0.5rem;">-</strong>
+                            </div>
+                            <div>
+                                <span style="color:#6b7280;font-size:0.875rem;">Competition:</span>
+                                <strong id="infoCompetition" style="color:#111827;margin-left:0.5rem;">-</strong>
+                            </div>
+                            <div>
+                                <span style="color:#6b7280;font-size:0.875rem;">User Score:</span>
+                                <strong id="infoUserScore" style="color:#2563eb;margin-left:0.5rem;font-size:1.1rem;">-</strong>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Score Entry (GIỐNG ADD-SCORE) -->
+                <div class="score-entry-wrapper" id="scoreEntryWrapper" style="display:none;">
+                    <div class="score-entry-header">
+                        <h3>Score Entry</h3>
+                        <p class="sub">Enter arrow scores for each end (6 arrows per end).</p>
+                    </div>
+
+                    <div class="score-tables-centered">
+                        <div id="adminScoreTablesContainer">
+                            <!-- Tables will be generated by JS (y chang add-score) -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/javascript/layout.js"></script>
+    <script src="/javascript/approve-score.js"></script>
+</body>
+</html>

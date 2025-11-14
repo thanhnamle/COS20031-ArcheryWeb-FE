@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Archery Score System — Archers</title>
+    <title>Archery Score System — Archer Detail</title>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="/style/style.css" />
@@ -11,11 +11,14 @@
 
   <body>
     <div class="container">
+      <!-- Header Placeholder -->
       <div id="header-placeholder"></div>
 
+      <!-- Main Content -->
       <main class="archer-detail-page" role="main">
+        <!-- Back Button -->
         <div class="back-row">
-          <button class="btn-back" onclick="goBack()">Archers</button>
+          <button class="btn-back" onclick="goBack()">← Archers</button>
         </div>
 
         <!-- Archer Profile Header -->
@@ -37,68 +40,54 @@
           </div>
         </section>
 
-        <!-- Tabs -->
+        <!-- Tabs Section -->
         <section class="tabs card">
-          <!-- Tab titles -->
+          <!-- Tab Navigation -->
           <div class="tab-list" role="tablist" aria-label="Archer tabs">
             <button class="tab active" role="tab" data-tab="overall" onclick="showTab('overall')">Overall</button>
             <button class="tab" role="tab" data-tab="performance" onclick="showTab('performance')">Performance</button>
             <button class="tab" role="tab" data-tab="history" onclick="showTab('history')">Match History</button>
           </div>
 
-          <!-- Tab content (tất cả nằm chung trong .tab-panels) -->
+          <!-- Tab Panels -->
           <div class="tab-panels">
-            <!-- Overall -->
+            <!-- Overall Tab -->
             <div id="tab-overall" class="tab-panel active">
               <div class="grid-2">
                 <div>
-                  <h3>Profile</h3>
+                  <h3>Profile Information</h3>
                   <table class="detail-table">
                     <tr><th>ID</th><td id="fieldId">—</td></tr>
-                    <tr><th>First name</th><td id="fieldFirst">—</td></tr>
-                    <tr><th>Last name</th><td id="fieldLast">—</td></tr>
-                    <tr><th>DOB</th><td id="fieldDob">—</td></tr>
+                    <tr><th>First Name</th><td id="fieldFirst">—</td></tr>
+                    <tr><th>Last Name</th><td id="fieldLast">—</td></tr>
+                    <tr><th>Date of Birth</th><td id="fieldDob">—</td></tr>
                     <tr><th>Gender</th><td id="fieldGender">—</td></tr>
-                    <tr><th>Default equipment</th><td id="fieldEquipment">—</td></tr>
+                    <tr><th>Default Equipment</th><td id="fieldEquipment">—</td></tr>
                     <tr><th>Club</th><td id="fieldClub">—</td></tr>
-                    <tr><th>Create at</th><td id="createAt">—</td></tr>
-                    <tr><th>Last update</th><td id="lastUpdate">—</td></tr>
+                    <tr><th>Created At</th><td id="createAt">—</td></tr>
+                    <tr><th>Last Updated</th><td id="lastUpdate">—</td></tr>
                   </table>
                 </div>
               </div>
             </div>
 
-            <!-- Performance -->
+            <!-- Performance Tab -->
             <div id="tab-performance" class="tab-panel">
               <div class="chart-card">
                 <div class="grid-2">
                   <div>
-                    <table class="detail-table">
-                      <tr><th>ID</th><td>—</td></tr>
-                      <tr><th>Score</th><td>—</td></tr>
-                      <tr><th>Best score</th><td>—</td></tr>
-                      <tr><th>Average score</th><td>—</td></tr>
-                      <tr><th>Total X's</th><td>—</td></tr>
-                    </table>
+                    <!-- Performance stats will be rendered here by JS -->
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- History -->
+            <!-- Match History Tab -->
             <div id="tab-history" class="tab-panel">
               <div class="chart-card">
                 <div class="grid-2">
                   <div>
-                    <table class="detail-table">
-                      <tr><th>Competition ID</th><td>—</td></tr>
-                      <tr><th>Record at</th><td>—</td></tr>
-                      <tr><th>Round ID</th><td>—</td></tr>
-                      <tr><th>ID</th><td>—</td></tr>
-                      <tr><th>Round snapshot</th><td>—</td></tr>
-                      <tr><th>Total</th><td>—</td></tr>
-                      <tr><th>X's count</th><td>—</td></tr>
-                    </table>
+                    <!-- Match history will be rendered here by JS -->
                   </div>
                 </div>
               </div>
@@ -106,14 +95,90 @@
           </div>
         </section>
 
+        <!-- Footer -->
         <footer>
           Demo data stored in <code>localStorage</code> key <strong>archery_demo_data_v1</strong>
         </footer>
       </main>
+
+      <!-- Edit Archer Modal -->
+      <aside id="editArcherModal" class="modal" style="display:none;">
+        <!-- Modal Overlay (click to close) -->
+        <div class="modal-overlay" onclick="closeEditArcherModal()"></div>
+        
+        <!-- Modal Content -->
+        <section class="modal-content">
+          <!-- Modal Header -->
+          <header class="modal-header">
+            <h2>Edit Archer</h2>
+            <button class="modal-close" onclick="closeEditArcherModal()" aria-label="Close modal">×</button>
+          </header>
+          
+          <!-- Modal Body -->
+          <article class="modal-body">
+            <form id="editArcherForm" autocomplete="off" onsubmit="updateArcher(event);">
+              <!-- Row 1: ID, First Name, Last Name -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="editId">ID *</label>
+                  <input type="text" id="editId" required />
+                </div>
+                <div class="form-group">
+                  <label for="editFirst">First Name *</label>
+                  <input type="text" id="editFirst" required />
+                </div>
+              </div>
+
+              <!-- Row 2: Last Name -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="editLast">Last Name *</label>
+                  <input type="text" id="editLast" required />
+                </div>
+              </div>
+              
+              <!-- Row 3: Date of Birth, Gender -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="editDob">Date of Birth *</label>
+                  <input type="date" id="editDob" required />
+                  <div id="editAge" style="font-size:0.95rem;color:#6b7280;margin-top:4px;"></div>
+                </div>
+                <div class="form-group">
+                  <label for="editGender">Gender *</label>
+                  <select id="editGender" required>
+                    <option value="">Select...</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- Row 4: Equipment, Club -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="editEquipment">Default Equipment</label>
+                  <input type="text" id="editEquipment" placeholder="Optional" />
+                </div>
+                <div class="form-group">
+                  <label for="editClub">Club</label>
+                  <input type="text" id="editClub" placeholder="Optional" />
+                </div>
+              </div>
+            </form>
+          </article>
+          
+          <!-- Modal Footer -->
+          <footer class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="closeEditArcherModal()">Cancel</button>
+            <button type="submit" form="editArcherForm" class="btn-primary" id="btnUpdateArcher">Update Archer</button>
+          </footer>
+        </section>
+      </aside>
     </div>
 
+    <!-- Scripts -->
     <script src="/javascript/layout.js"></script>
-    
     <script src="/javascript/archer-detail.js"></script>
   </body>
 </html>
