@@ -1,57 +1,58 @@
 /* javascript/auth.js */
 
-// Khóa để lưu "cơ sở dữ liệu" người dùng
-const USER_DB_KEY = "archery_user_db";
-// Khóa để lưu "phiên đăng nhập"
-const AUTH_KEY = "archery_auth_user";
+/* ------------------------------------------------------------------
+   CONSTANTS
+------------------------------------------------------------------ */
+const USER_DB_KEY   = "archery_user_db";      // users (name,email,pwd,role)
+const AUTH_KEY      = "archery_auth_user";    // current session
+const STORAGE_KEY   = "archery_app_data";     // main app data (archers,…)
 
+/* ------------------------------------------------------------------
+   DOM READY
+------------------------------------------------------------------ */
 document.addEventListener("DOMContentLoaded", () => {
-    const loginForm = document.getElementById("loginForm");
+    const loginForm  = document.getElementById("loginForm");
     const signupForm = document.getElementById("signupForm");
-    
-    if(loginForm) {
-        loginForm.addEventListener("submit", handleLogin);
-    }
-    if(signupForm) {
-        signupForm.addEventListener("submit", handleSignup);
-    }
+
+    if (loginForm)  loginForm.addEventListener("submit",  handleLogin);
+    if (signupForm) signupForm.addEventListener("submit", handleSignup);
 });
 
-// Hàm lấy CSDL người dùng từ localStorage
+/* ------------------------------------------------------------------
+   USER DATABASE (localStorage)
+------------------------------------------------------------------ */
 function getUserDatabase() {
-    const dbRaw = localStorage.getItem(USER_DB_KEY);
-    if (dbRaw) {
-        try {
-            return JSON.parse(dbRaw);
-        } catch (e) {
-            return [];
-        }
-    }
-    return []; // Trả về mảng rỗng nếu chưa có
+    const raw = localStorage.getItem(USER_DB_KEY);
+    if (!raw) return [];
+    try { return JSON.parse(raw); } catch { return []; }
 }
-
-// Hàm lưu CSDL người dùng
 function saveUserDatabase(db) {
     localStorage.setItem(USER_DB_KEY, JSON.stringify(db));
 }
 
+/* ------------------------------------------------------------------
+   APP DATA (archers, scores, …)
+------------------------------------------------------------------ */
 function getStorageData() {
-    const raw = localStorage.getItem("archery_demo_data_v1");
-    if(!raw) return { archers: [] }; // Trả về cấu trúc tối thiểu
-    try { 
-        return JSON.parse(raw); 
-    } catch(e) {
-        return { archers: [] };
-    }
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { archers: [], scores: [], rounds: [], competitions: [] };
+    try { return JSON.parse(raw); }
+    catch { return { archers: [], scores: [], rounds: [], competitions: [] }; }
+}
+function saveStorageData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-// Xử lý đăng ký
+/* ------------------------------------------------------------------
+   SIGN-UP
+------------------------------------------------------------------ */
 function handleSignup(event) {
     event.preventDefault();
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim().toLowerCase();
+
+    const name     = document.getElementById("name").value.trim();
+    const email    = document.getElementById("email").value.trim().toLowerCase();
     const password = document.getElementById("password").value;
-    const errorEl = document.getElementById("authError");
+    const errorEl  = document.getElementById("authError");
 
     if (!name || !email || !password) {
         errorEl.textContent = "Please fill in all fields.";
@@ -60,87 +61,99 @@ function handleSignup(event) {
 
     const db = getUserDatabase();
 
-    // KIỂM TRA: Email đã tồn tại chưa?
-    const existingUser = db.find(user => user.email === email);
-    if (existingUser) {
+    // ---- email already taken? ----
+    if (db.some(u => u.email === email)) {
         errorEl.textContent = "Email is already registered.";
         return;
     }
 
-    // TẠO user mới với role
-    const role = (email === 'admin@app.com') ? 'admin' : 'archer'; // Quy định admin
-    const newUser = { name, email, password, role }; // Thêm role
+    // ---- create user (admin shortcut) ----
+    const role = (email === 'admin@app.com') ? 'admin' : 'archer';
+    const newUser = { name, email, password, role };
     db.push(newUser);
     saveUserDatabase(db);
 
-    loginUser(email, password);
-
-    // Đăng nhập cho user mới
-    localStorage.setItem(AUTH_KEY, JSON.stringify(newUser));
-    
-    // Chuyển hướng đến dashboard
-    window.location.href = "/pages/dashboard.html";
-}
-
-// Xử lý đăng nhập
-function handleLogin(event) {
-    event.preventDefault();
-    const email = document.getElementById("email").value.trim().toLowerCase();
-    const password = document.getElementById("password").value;
-    
-    loginUser(email, password); // Gọi hàm login chung
-}
-
-// TÁCH HÀM LOGIN RA
-function loginUser(email, password) {
-    const errorEl = document.getElementById("authError");
-    if (!errorEl) { // Dùng cho trường hợp signup gọi
-        console.log("Attempting login post-signup...");
-    }
-
-    if (!email || !password) {
-        if(errorEl) errorEl.textContent = "Please enter both email and password.";
-        return;
-    }
-
-    const db = getUserDatabase();
-    const user = db.find(u => u.email === email);
-    
-    if (!user || user.password !== password) {
-        if(errorEl) errorEl.textContent = "Invalid email or password.";
-        return;
-    }
-
-    // THÀNH CÔNG: TÌM HỒ SƠ CUNG THỦ VÀ LƯU PHIÊN ĐĂNG NHẬP
-    
-    // 1. Xác định vai trò
-    const role = user.role || ((user.email === 'admin@app.com') ? 'admin' : 'archer');
-    
-    // 2. Nếu là 'archer', tìm archerId bằng email
-    let archerId = null;
+    // ---- if archer → create linked profile ----
     if (role === 'archer') {
-        const data = getStorageData(); // Lấy data chính
-        const archerProfile = data.archers.find(a => a.email === user.email);
-        
-        if (archerProfile) {
-            archerId = archerProfile.id;
-        } else {
-            // Trường hợp Cung thủ đăng ký nhưng admin chưa tạo hồ sơ
-            if(errorEl) errorEl.textContent = "Your account is not linked to an archer profile. Contact admin.";
+        try {
+            const data = getStorageData();
+
+            const [first, ...lastParts] = name.split(' ');
+            const last = lastParts.join(' ') || "User";
+
+            const profile = {
+                id:        `a${Date.now()}`,
+                first:     first || "New",
+                last:      last,
+                email:     email,
+                dob:       "2000-01-01",
+                gender:    "M",
+                createdAt: new Date().toISOString()
+            };
+
+            data.archers = data.archers || [];
+            data.archers.push(profile);
+            saveStorageData(data);
+        } catch (e) {
+            console.error("Profile creation failed:", e);
+            errorEl.textContent = "Signup OK, but profile link failed. Contact admin.";
             return;
         }
     }
 
-    // 3. Tạo đối tượng session để lưu
-    const authSession = {
-        name: user.name,
-        email: user.email,
-        role: role,
-        archerId: archerId // Sẽ là null nếu là admin
-    };
+    // ---- log the fresh user in (single source of truth) ----
+    loginUser(email, password);   // this already stores AUTH_KEY + redirects
+}
 
-    localStorage.setItem(AUTH_KEY, JSON.stringify(authSession));
-    
-    // Chuyển hướng
+/* ------------------------------------------------------------------
+   LOGIN
+------------------------------------------------------------------ */
+function handleLogin(event) {
+    event.preventDefault();
+    const email    = document.getElementById("email").value.trim().toLowerCase();
+    const password = document.getElementById("password").value;
+    loginUser(email, password);
+}
+
+/* ------------------------------------------------------------------
+   CORE LOGIN (shared by signup & login)
+------------------------------------------------------------------ */
+function loginUser(email, password) {
+    const errorEl = document.getElementById("authError");   // may be null on post-signup call
+
+    if (!email || !password) {
+        if (errorEl) errorEl.textContent = "Please enter both email and password.";
+        return;
+    }
+
+    const db   = getUserDatabase();
+    const user = db.find(u => u.email === email);
+
+    if (!user || user.password !== password) {
+        if (errorEl) errorEl.textContent = "Invalid email or password.";
+        return;
+    }
+
+    // ---- role fallback (keeps old admin shortcut alive) ----
+    const role = user.role || (email === 'admin@app.com' ? 'admin' : 'archer');
+
+    // ---- archer → find profile id ----
+    let archerId = null;
+    if (role === 'archer') {
+        const data    = getStorageData();
+        const profile = data.archers.find(a => a.email === email);
+        if (!profile) {
+            if (errorEl) errorEl.textContent = "Account not linked to a profile. Contact admin.";
+            console.error(`No profile for ${email}`);
+            return;
+        }
+        archerId = profile.id;
+    }
+
+    // ---- store session (single place) ----
+    const session = { name: user.name, email, role, archerId };
+    localStorage.setItem(AUTH_KEY, JSON.stringify(session));
+
+    // ---- go to dashboard ----
     window.location.href = "/pages/dashboard.html";
 }

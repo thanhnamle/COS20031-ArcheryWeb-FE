@@ -586,6 +586,28 @@ nav.nav.sidebar-nav a.active {
     border-top: 1px solid #1f2937;
 }
 
+.sidebar-user-info {
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    background: #1f2937;
+    border-radius: 8px;
+    color: #d1d5db;
+}
+#sidebarUserEmail {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#sidebarUserRole {
+    display: block;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
 .btn-logout {
     display: flex;
     align-items: center;

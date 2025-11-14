@@ -4,9 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archery Score System — Settings</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
     <link rel="stylesheet" href="/style/style.css" />
 </head>
 
@@ -17,122 +14,80 @@
         <main class="settings-page" role="main">
             <div class="page-header">
                 <div>
-                    <h2>System Settings</h2>
-                    <p class="sub">Manage core system data like rounds and equipment</p>
+                    <h2>Settings</h2>
+                    <p class="sub">Manage your account settings and preferences</p>
                 </div>
             </div>
 
             <section class="table-section settings-section">
                 <header class="table-header">
-                    <h2>Equipment Types</h2>
-                    <nav class="table-controls">
-                         <button class="btn-primary small" onclick="showEquipmentTypeModal()">
-                            <span>+</span> Add Type
-                        </button>
-                    </nav>
+                    <h2>
+                        <i class="fa-solid fa-user" style="margin-right: 0.5rem;"></i>
+                        Profile Information
+                    </h2>
                 </header>
-                <article class="table-wrapper">
-                    <table class="settings-table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col" class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="equipmentTypesTableBody">
-                            </tbody>
-                    </table>
+                <article class="modal-body" style="padding: 1.5rem 2rem;">
+                    <form id="profileForm">
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label for="profileFullName">Full Name</label>
+                            <input type="text" id="profileFullName" placeholder="Your full name">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label for="profileEmail">Email</label>
+                            <input type="email" id="profileEmail" disabled>
+                            <small class="sub" style="margin-top: 0.5rem;">Email cannot be changed from this interface.</small>
+                        </div>
+                        <button type="submit" class="btn-primary" id="profileSaveChangesBtn">Save Changes</button>
+                    </form>
                 </article>
             </section>
 
             <section class="table-section settings-section">
                 <header class="table-header">
-                    <h2>Rounds</h2>
-                    <nav class="table-controls">
-                         <button class="btn-primary small" onclick="showRoundModal()">
-                            <span>+</span> Add Round
-                        </button>
-                    </nav>
+                    <h2>
+                        <i class="fa-solid fa-file-invoice" style="margin-right: 0.5rem;"></i>
+                        Account Details
+                    </h2>
                 </header>
-                <article class="table-wrapper">
-                    <table class="settings-table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Description</th>
-                                <th scope="col" class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="roundsTableBody">
-                            </tbody>
-                    </table>
+                <article class="modal-body" style="padding: 1.5rem 2rem;">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label>User ID</label>
+                        <p id="profileUserID" style="font-weight: 600; color: #374151; margin: 0.5rem 0;">-</p>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label>Account Created</label>
+                        <p id="profileAccountCreated" style="font-weight: 600; color: #374151; margin: 0.5rem 0;">-</p>
+                    </div>
                 </article>
             </section>
+
+            <section class="table-section settings-section">
+                <header class="table-header">
+                    <h2>
+                        <i class="fa-solid fa-lock" style="margin-right: 0.5rem;"></i>
+                        Security
+                    </h2>
+                </header>
+                <article class="modal-body" style="padding: 1.5rem 2rem;">
+                    <form id="securityForm">
+                         <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label for="profilePassword">Password</label>
+                            <input type="password" id="profilePassword" value="••••••••" disabled>
+                        </div>
+                        <button type="button" class="btn-secondary" disabled>Change Password</button>
+                        <small class="sub" style="margin-left: 1rem;">(Password changes are disabled in this demo)</small>
+                    </form>
+                </article>
+            </section>
+
 
             <footer>Demo data stored in <code>localStorage</code> key <strong>archery_demo_data_v1</strong></footer>
         </main>
-
-        <aside id="equipmentTypeModal" class="modal" style="display: none;">
-            <div class="modal-overlay" onclick="closeModal('equipmentTypeModal')"></div>
-            <section class="modal-content">
-                <header class="modal-header">
-                    <h2 id="equipmentTypeModalTitle">Add Equipment Type</h2>
-                    <button class="modal-close" onclick="closeModal('equipmentTypeModal')" aria-label="Close modal">×</button>
-                </header>
-                <article class="modal-body">
-                    <form id="equipmentTypeForm">
-                        <input type="hidden" id="equipmentTypeId" value="">
-                        <div class="form-group">
-                            <label for="equipmentTypeName">Type Name *</label>
-                            <input type="text" id="equipmentTypeName" required placeholder="e.g., Recurve">
-                            <span class="form-error" id="equipmentTypeNameError"></span>
-                        </div>
-                    </form>
-                </article>
-                <footer class="modal-footer">
-                    <button type="button" class="btn-secondary" onclick="closeModal('equipmentTypeModal')">Cancel</button>
-                    <button type="submit" class="btn-primary" onclick="saveEquipmentType(event)">
-                        <span id="equipmentTypeSaveButtonText">Add Type</span>
-                    </button>
-                </footer>
-            </section>
-        </aside>
-
-        <aside id="roundModal" class="modal" style="display: none;">
-            <div class="modal-overlay" onclick="closeModal('roundModal')"></div>
-            <section class="modal-content">
-                <header class="modal-header">
-                    <h2 id="roundModalTitle">Add Round</h2>
-                    <button class="modal-close" onclick="closeModal('roundModal')" aria-label="Close modal">×</button>
-                </header>
-                <article class="modal-body">
-                    <form id="roundForm">
-                        <input type="hidden" id="roundId" value="">
-                        <div class="form-group">
-                            <label for="roundName">Round Name *</label>
-                            <input type="text" id="roundName" required placeholder="e.g., WA 720">
-                            <span class="form-error" id="roundNameError"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="roundDescription">Description</label>
-                            <input type="text" id="roundDescription" placeholder="e.g., 72 arrows, 4 distances">
-                            <span class="form-error" id="roundDescriptionError"></span>
-                        </div>
-                        </form>
-                </article>
-                <footer class="modal-footer">
-                    <button type="button" class="btn-secondary" onclick="closeModal('roundModal')">Cancel</button>
-                    <button type="submit" class="btn-primary" onclick="saveRound(event)">
-                        <span id="roundSaveButtonText">Add Round</span>
-                    </button>
-                </footer>
-            </section>
-        </aside>
-
+        
         <aside id="toast" class="toast" style="display: none;"></aside>
     </div>
+    
     <script src="/javascript/layout.js"></script>
-
     <script src="/javascript/settings.js"></script>
 </body>
 </html>
