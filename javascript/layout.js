@@ -18,7 +18,6 @@ const ALLOWED_PAGES = {
     archer: [
         '/pages/dashboard.html',
         '/pages/add-score.html',
-        '/pages/matches.html',
         '/pages/settings.html'
     ]
 };
@@ -96,7 +95,8 @@ function updateSidebarForRole() {
         'a[href="/pages/archers.html"]',
         'a[href="/pages/equipments.html"]',
         'a[href="/pages/statistics.html"]',
-        'a[href="/pages/approve-score.html"]'
+        'a[href="/pages/approve-score.html"]',
+        'a[href="/pages/matches.html"]'
     ];
 
     if (role === 'archer') {
@@ -104,6 +104,13 @@ function updateSidebarForRole() {
             const el = nav.querySelector(sel);
             if (el) el.style.display = 'none';
         });
+
+        const addScoreLink = nav.querySelector('a[href="/pages/add-score.html"]');
+        if (addScoreLink) {
+            addScoreLink.style.display = 'flex'; // Make sure it's visible
+            const span = addScoreLink.querySelector('span');
+            if (span) span.textContent = 'Add Score'; // Ensure it says "Add Score"
+        }
     }
 
     // ---- 2. Admin: rename "Add Score" → "Approve Scores" ----
@@ -114,6 +121,11 @@ function updateSidebarForRole() {
             const span = addScoreLink.querySelector('span');
             if (span) span.textContent = 'Approve Scores';
         }
+
+        const icon = addScoreLink.querySelector('i');
+            if (icon) {
+                icon.className = 'fa-solid fa-clipboard-check'; // Change icon
+            }
     }
 }
 
@@ -165,8 +177,7 @@ function setActiveNavigation() {
         if (path.includes('/pages/archer-detail.html')) {
             best = document.querySelector('a[href="/pages/archers.html"]');
         } else if (path.includes('/pages/approve-score.html')) {
-            best = document.querySelector('a[href="/pages/approve-score.html"]')
-                || document.querySelector('a[href="/pages/add-score.html"]');
+            best = document.querySelector('a[href="/pages/approve-score.html"]');
         }
     }
 

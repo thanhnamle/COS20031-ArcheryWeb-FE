@@ -98,7 +98,9 @@ function renderStagingScores(filter = '') {
   
   let stagingScores = data.stagingScores.slice();
   
-  if (filter) {
+  if (!filter) {
+    stagingScores = stagingScores.filter(s => s.status === 'pending' || s.status === 'verified');
+  } else if (filter) {
     stagingScores = stagingScores.filter(s => s.status === filter);
   }
   
