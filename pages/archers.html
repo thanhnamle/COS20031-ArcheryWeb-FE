@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archery Score System — Archers</title>
-    <link rel="stylesheet" href="/style/style.css"/>
+    <link rel="stylesheet" href="/style/tyle.css"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -136,10 +137,7 @@
                                 <th scope="col">Gender</th>
                                 <th scope="col">Age</th>
                                 <th scope="col">Date of Birth</th>
-                                <th scope="col">Scores</th>
-                                <th scope="col">Best Score</th>
-                                <th scope="col">Avg Score</th>
-                                <th scope="col">Total X's</th>
+                                <th scope="scope"scope>Country</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
@@ -197,18 +195,6 @@
                                 <span class="form-error" id="lastNameError"></span>
                             </div>
                         </div>
-                        
-                        <div class="form-group" style="margin-bottom: 1.5rem;">
-                            <label for="email">Login Email *</label>
-                            <input
-                                type="email"
-                                id="email"
-                                required
-                                placeholder="Archer's login email"
-                                autocomplete="email"
-                            >
-                            <span class="form-error" id="emailError"></span>
-                        </div>
 
                         <div class="form-row">
                             <div class="form-group">
@@ -233,6 +219,70 @@
                                 <span class="form-error" id="genderError"></span>
                             </div>
                         </div>
+
+                        <div class="form-row">
+                        
+                            <div class="form-group">
+                            <label for="country">Country *</label>
+                            <select id="country" required>
+                                <option value="">Select country...</option>
+
+                                <option value="VN">
+                                    <i class="fi fi-vn"></i> Vietnam
+                                </option>
+                                <option value="US">
+                                    <i class="fi fi-us"></i> United States
+                                </option>
+                                <option value="GB">
+                                    <i class="fi fi-gb"></i> United Kingdom
+                                </option>
+                                <option value="AU">
+                                    <i class="fi fi-au"></i> Australia
+                                </option>
+                                <option value="CA">
+                                    <i class="fi fi-ca"></i> Canada
+                                </option>
+                                <option value="DE">
+                                    <i class="fi fi-de"></i> Germany
+                                </option>
+                                <option value="FR">
+                                    <i class="fi fi-fr"></i> France
+                                </option>
+                                <option value="JP">
+                                    <i class="fi fi-jp"></i> Japan
+                                </option>
+                                <option value="KR">
+                                    <i class="fi fi-kr"></i> South Korea
+                                </option>
+                                <option value="CN">
+                                    <i class="fi fi-cn"></i> China
+                                </option>
+                                <option value="IN">
+                                    <i class="fi fi-in"></i> India
+                                </option>
+                                <option value="TH">
+                                    <i class="fi fi-th"></i> Thailand
+                                </option>
+                                <option value="SG">
+                                    <i class="fi fi-sg"></i> Singapore
+                                </option>
+                                <option value="MY">
+                                    <i class="fi fi-my"></i> Malaysia
+                                </option>
+                                <option value="ID">
+                                    <i class="fi fi-id"></i> Indonesia
+                                </option>
+                                <option value="PH">
+                                    <i class="fi fi-ph"></i> Philippines
+                                </option>
+                            </select>
+
+                            <span class="form-error" id="countryError"></span>
+                        </div>
+                    </div>
+
+
+                        
 
                         <div class="form-info">
                             <p id="ageDisplay" class="age-info"></p>

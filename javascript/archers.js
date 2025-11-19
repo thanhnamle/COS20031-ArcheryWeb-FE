@@ -7,6 +7,45 @@
 
 const STORAGE_KEY = "archery_demo_data_v1";
 
+// ========== COUNTRY MAPPING (THÊM MỚI) ==========
+const COUNTRY_NAMES = {
+  'VN': 'Vietnam',
+  'US': 'United States',
+  'GB': 'United Kingdom',
+  'AU': 'Australia',
+  'CA': 'Canada',
+  'DE': 'Germany',
+  'FR': 'France',
+  'JP': 'Japan',
+  'KR': 'South Korea',
+  'CN': 'China',
+  'IN': 'India',
+  'TH': 'Thailand',
+  'SG': 'Singapore',
+  'MY': 'Malaysia',
+  'ID': 'Indonesia',
+  'PH': 'Philippines'
+};
+
+const COUNTRY_FLAGS = {
+  'VN': '<i class="fi fi-vn"></i>',
+  'US': '<i class="fi fi-us"></i>',
+  'GB': '<i class="fi fi-gb"></i>',
+  'AU': '<i class="fi fi-au"></i>',
+  'CA': '<i class="fi fi-ca"></i>',
+  'DE': '<i class="fi fi-de"></i>',
+  'FR': '<i class="fi fi-fr"></i>',
+  'JP': '<i class="fi fi-jp"></i>',
+  'KR': '<i class="fi fi-kr"></i>',
+  'CN': '<i class="fi fi-cn"></i>',
+  'IN': '<i class="fi fi-in"></i>',
+  'TH': '<i class="fi fi-th"></i>',
+  'SG': '<i class="fi fi-sg"></i>',
+  'MY': '<i class="fi fi-my"></i>',
+  'ID': '<i class="fi fi-id"></i>',
+  'PH': '<i class="fi fi-ph"></i>'
+};
+
 // Load data from localStorage
 function loadData(){
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -127,6 +166,11 @@ function renderArchersTable(filters = {}){
     const age = calculateAge(archer.dob);
     const dobFormatted = new Date(archer.dob).toLocaleDateString('en-GB');
     
+    // ===== THÊM COUNTRY INFO =====
+    const countryCode = archer.country || 'VN';
+    const countryFlag = COUNTRY_FLAGS[countryCode] || '🌍';
+    const countryName = COUNTRY_NAMES[countryCode] || 'Unknown';
+    
     const row = document.createElement('tr');
     row.innerHTML = `
       <td class="text-center">${index + 1}</td>
@@ -143,12 +187,11 @@ function renderArchersTable(filters = {}){
       </td>
       <td class="text-center">${age}</td>
       <td class="text-center">${dobFormatted}</td>
-      <td class="text-center">${stats.totalScores}</td>
       <td class="text-center">
-        <span class="score-highlight">${stats.bestScore}</span>
+        <span style="font-size:1.2rem;" title="${countryName}">${countryFlag}</span>
+        <span style="font-size:0.85rem;color:#6b7280;margin-left:0.25rem;">${countryCode}</span>
       </td>
-      <td class="text-center">${stats.avgScore}</td>
-      <td class="text-center">${stats.totalXs}</td>
+      
       <td class="text-center">
         <div class="action-buttons">
           <button class="btn-icon btn-edit" onclick="editArcher('${archer.id}')" title="Edit">
@@ -348,10 +391,6 @@ function validateArcherForm(formData){
   if(!formData.lastName || formData.lastName.trim().length < 2){
     errors.lastName = "Last name must be at least 2 characters";
   }
-
-  if(!formData.email || !formData.email.includes('@')){
-    errors.email = "A valid email is required";
-  }
   
   if(!formData.dob){
     errors.dob = "Date of birth is required";
@@ -364,6 +403,11 @@ function validateArcherForm(formData){
   
   if(!formData.gender || !['M', 'F'].includes(formData.gender)){
     errors.gender = "Please select a valid gender";
+  }
+  
+  // ===== THÊM VALIDATION CHO COUNTRY =====
+  if(!formData.country || !COUNTRY_NAMES[formData.country]){
+    errors.country = "Please select a valid country";
   }
   
   return errors;
@@ -389,9 +433,9 @@ function saveArcher(event){
     id: document.getElementById('archerId').value,
     firstName: document.getElementById('firstName').value.trim(),
     lastName: document.getElementById('lastName').value.trim(),
-    email: document.getElementById('email').value.trim().toLowerCase(),
     dob: document.getElementById('dob').value,
-    gender: document.getElementById('gender').value
+    gender: document.getElementById('gender').value,
+    country: document.getElementById('country').value // ===== THÊM COUNTRY =====
   };
   
   // Validate
@@ -416,9 +460,9 @@ function saveArcher(event){
         ...data.archers[index],
         first: formData.firstName,
         last: formData.lastName,
-        email: formData.email,
         dob: formData.dob,
         gender: formData.gender,
+        country: formData.country, // ===== THÊM COUNTRY =====
         updatedAt: new Date().toISOString()
       };
       
@@ -435,6 +479,7 @@ function saveArcher(event){
       last: formData.lastName,
       dob: formData.dob,
       gender: formData.gender,
+      country: formData.country, // ===== THÊM COUNTRY =====
       createdAt: new Date().toISOString()
     };
     
@@ -459,9 +504,9 @@ function editArcher(id){
   document.getElementById('archerId').value = archer.id;
   document.getElementById('firstName').value = archer.first;
   document.getElementById('lastName').value = archer.last;
-  document.getElementById('email').value = archer.email || '';
   document.getElementById('dob').value = archer.dob;
   document.getElementById('gender').value = archer.gender;
+  document.getElementById('country').value = archer.country || 'VN'; // ===== THÊM COUNTRY =====
   
   // Update modal title
   document.getElementById('modalTitle').textContent = 'Edit Archer';
