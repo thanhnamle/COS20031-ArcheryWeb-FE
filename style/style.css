@@ -1292,3 +1292,33 @@ footer { text-align:center; margin-top:2rem; font-size:0.85rem; color:#9ca3af; }
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Archer info display - responsive text */
+#currentArcherDisplay {
+  word-break: break-word;
+  max-width: 250px;
+  display: inline-block;
+}
+
+/* Score header - wrap long text */
+.score-header #scoreHeaderInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-header #scoreHeaderInfo span {
+  white-space: nowrap;
+}
+
+.score-header #scoreHeaderInfo strong {
+  word-break: break-word;
+  max-width: 200px;
+  display: inline-block;
+}
+
+
+

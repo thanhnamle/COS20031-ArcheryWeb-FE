@@ -33,12 +33,6 @@
                 <h3>Score Information</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="selectArcher">Archer *</label>
-                        <select id="selectArcher" required>
-                            <option value="">Select archer...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label for="selectRound">Round *</label>
                         <select id="selectRound" required>
                             <option value="">Select round...</option>
@@ -53,6 +47,16 @@
                     <div class="form-group">
                         <label for="recordedAt">Date & Time *</label>
                         <input type="datetime-local" id="recordedAt" required />
+                    </div>
+                </div>
+
+                <div style="background:#f0f9ff;padding:1rem;border-radius:8px;margin-top:1rem;border-left:4px solid #2563eb;">
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <i class="fas fa-user-circle" style="font-size:1.5rem;color:#2563eb;"></i>
+                        <div>
+                            <span style="color:#6b7280;font-size:0.875rem;">Recording scores for:</span>
+                            <strong id="currentArcherDisplay" style="color:#111827;font-size:1.1rem;margin-left:0.5rem;">Loading...</strong>
+                        </div>
                     </div>
                 </div>
             </section>

@@ -116,3 +116,62 @@ function showToast(message, type = "info"){
     }, 300);
   }, 3000);
 }
+
+function updateProfile(event) {
+  event.preventDefault();
+  
+  const newName = document.getElementById('fullName').value.trim();
+  const newEmail = document.getElementById('email').value.trim();
+  const currentPassword = document.getElementById('currentPassword').value;
+  const newPassword = document.getElementById('newPassword').value.trim();
+  
+  if (!newName || !newEmail) {
+    showToast('❌ Name and email are required!', 'error');
+    return;
+  }
+  
+  const user = getAuthUser();
+  if (!user) {
+    showToast('❌ Not logged in!', 'error');
+    return;
+  }
+  
+  // Verify current password if changing password
+  if (newPassword && currentPassword !== user.password) {
+    showToast('❌ Current password is incorrect!', 'error');
+    return;
+  }
+  
+  // Update auth user
+  user.name = newName;
+  user.email = newEmail;
+  if (newPassword) user.password = newPassword;
+  
+  localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+  
+  // =====  AUTO-UPDATE ARCHER PROFILE =====
+  if (user.archerId) {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (data && data.archers) {
+      const archer = data.archers.find(a => a.id === user.archerId);
+      
+      if (archer) {
+        const nameParts = newName.split(' ');
+        archer.first = nameParts[0];
+        archer.last = nameParts.slice(1).join(' ') || "Archer";
+        archer.email = newEmail;
+        archer.updatedAt = new Date().toISOString();
+        
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        console.log('✅ Archer profile synced with auth user');
+      }
+    }
+  }
+  
+  showToast('✅ Profile updated successfully!', 'success');
+  
+  // Update display
+  setTimeout(() => {
+    displayUserInfo(user);
+  }, 500);
+}

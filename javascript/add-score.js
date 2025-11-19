@@ -1,8 +1,9 @@
 // add-score.js
 // Logic for add-score.html page
-// USER submits scores for admin review
+// USER submits scores for admin review (ONLY FOR THEMSELVES)
 
 const STORAGE_KEY = "archery_demo_data_v1";
+const AUTH_KEY = "archery_auth_user";
 
 // ========== Data Helpers ==========
 function loadData() {
@@ -18,6 +19,11 @@ function loadData() {
 
 function saveData(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function getAuthUser() {
+  const raw = localStorage.getItem(AUTH_KEY);
+  return raw ? JSON.parse(raw) : null;
 }
 
 // ========== Auto-detect Face Size ==========
@@ -76,151 +82,194 @@ function parseRoundDetails(detailsStr) {
 
 // ========== Initialization ==========
 document.addEventListener('DOMContentLoaded', () => {
-    const user = getAuthUser();
-    
-    // 1. Check if user needs to register
-    if (user && user.role === 'archer' && !user.archerId) {
-        showRegistrationModal(user);
-    } else {
-        // Normal initialization
-        initPage(user);
-    }
+  const user = getAuthUser();
+  
+  // Check if user is logged in
+  if (!user) {
+    alert('❌ You must be logged in to add scores!');
+    window.location.href = '/pages/login.html';
+    return;
+  }
+  
+  // Check if user needs to register as archer
+  if (user.role === 'archer' && !user.archerId) {
+    showRegistrationModal(user);
+  } else {
+    initPage(user);
+  }
 });
 
-function getAuthUser() {
-    const raw = localStorage.getItem(AUTH_KEY);
-    return raw ? JSON.parse(raw) : null;
-}
-
 function initPage(user) {
-    populateArchers(user); // Pass user to filter dropdown
-    populateRounds();
-    populateCompetitions();
-    
-    // Set default date
-    const now = new Date();
-    // Adjust to local ISO string roughly
-    const localIso = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
-    const recordedInput = document.getElementById('recordedAt');
-    if (recordedInput) recordedInput.value = localIso;
-    
-    updateDateDisplay();
-    
-    // Listeners
-    document.getElementById('selectArcher')?.addEventListener('change', updateArcherDisplay);
-    document.getElementById('selectRound')?.addEventListener('change', handleRoundChange);
-    document.getElementById('selectCompetition')?.addEventListener('change', updateCompetitionDisplay);
-    document.getElementById('recordedAt')?.addEventListener('change', updateDateDisplay);
-    
-    renderScoreTable(null);
+  const data = loadData();
+  
+  // Display current archer info
+  displayCurrentArcher(user);
+  
+  // Populate dropdowns (NO ARCHER DROPDOWN)
+  populateRounds();
+  populateCompetitions();
+  
+  // Set default date/time
+  const now = new Date();
+  const localIso = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+  const recordedInput = document.getElementById('recordedAt');
+  if (recordedInput) recordedInput.value = localIso;
+  
+  updateDateDisplay();
+  
+  // Attach listeners (NO ARCHER CHANGE LISTENER)
+  document.getElementById('selectRound')?.addEventListener('change', handleRoundChange);
+  document.getElementById('selectCompetition')?.addEventListener('change', updateCompetitionDisplay);
+  document.getElementById('recordedAt')?.addEventListener('change', updateDateDisplay);
+  
+  renderScoreTable(null);
 }
 
-// ========== Modified Populate Archers ==========
-function populateArchers(user) {
-    const data = loadData();
-    if (!data || !data.archers) return;
-
-    const select = document.getElementById('selectArcher');
-    if (!select) return;
-
-    select.innerHTML = '';
-
-    // Logic: If Admin, show all. If Archer, ONLY show themselves.
-    if (user && user.role === 'archer' && user.archerId) {
-        const myProfile = data.archers.find(a => a.id === user.archerId);
-        if (myProfile) {
-            const option = document.createElement('option');
-            option.value = myProfile.id;
-            option.textContent = `${myProfile.first} ${myProfile.last} (You)`;
-            option.selected = true;
-            select.appendChild(option);
-            
-            // Lock the dropdown
-            select.disabled = true; 
-            // Trigger display update manually since we set it programmatically
-            setTimeout(updateArcherDisplay, 50); 
-            return;
-        }
+// ========== Display Current Archer Info (WITH AUTO-SYNC) ==========
+function displayCurrentArcher(user) {
+  const displayElement = document.getElementById('currentArcherDisplay');
+  if (!displayElement) return;
+  
+  const data = loadData();
+  if (!data || !data.archers) {
+    displayElement.textContent = 'Unknown Archer';
+    return;
+  }
+  
+  const archer = data.archers.find(a => a.id === user.archerId);
+  
+  if (archer) {
+    // ✅ AUTO-SYNC NAME FROM AUTH TO ARCHER PROFILE
+    const nameParts = (user.name || "User").split(' ');
+    const authFirstName = nameParts[0];
+    const authLastName = nameParts.slice(1).join(' ') || "";
+    
+    // Check if name is different → Update
+    if (archer.first !== authFirstName || archer.last !== authLastName) {
+      console.log(`🔄 Syncing name: ${archer.first} ${archer.last} → ${authFirstName} ${authLastName}`);
+      archer.first = authFirstName;
+      archer.last = authLastName;
+      archer.updatedAt = new Date().toISOString();
+      saveData(data);
+      console.log('✅ Archer name synced with auth user');
     }
-
-    // Default/Admin view: Show all
-    select.innerHTML = '<option value="">Select archer...</option>';
-    data.archers.forEach(archer => {
-        const option = document.createElement('option');
-        option.value = archer.id;
-        option.textContent = `${archer.first} ${archer.last}`;
-        select.appendChild(option);
-    });
+    
+    // Sync email if different
+    if (archer.email !== user.email) {
+      archer.email = user.email;
+      archer.updatedAt = new Date().toISOString();
+      saveData(data);
+      console.log('✅ Archer email synced');
+    }
+    
+    displayElement.textContent = `${archer.first} ${archer.last}`;
+  } else {
+    displayElement.textContent = 'Unknown Archer';
+  }
 }
 
 // ========== Registration Logic ==========
 function showRegistrationModal(user) {
-    const modal = document.getElementById('registrationModal');
-    if (!modal) return;
+  const modal = document.getElementById('registrationModal');
+  if (!modal) return;
 
-    // Split Full Name into First/Last for pre-filling
-    const nameParts = (user.name || "User").split(' ');
-    const firstName = nameParts[0];
-    const lastName = nameParts.slice(1).join(' ') || "Archer";
+  const nameParts = (user.name || "User").split(' ');
+  const firstName = nameParts[0];
+  const lastName = nameParts.slice(1).join(' ') || "Archer";
 
-    document.getElementById('regFirstName').value = firstName;
-    document.getElementById('regLastName').value = lastName;
+  document.getElementById('regFirstName').value = firstName;
+  document.getElementById('regLastName').value = lastName;
 
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+  // ✅ CHECK IF ARCHER ALREADY EXISTS (by email)
+  const data = loadData();
+  const existingArcher = data.archers ? data.archers.find(a => a.email === user.email) : null;
 
-    // Handle Form Submit
-    const form = document.getElementById('registrationForm');
-    form.onsubmit = (e) => {
-        e.preventDefault();
-        completeRegistration(user);
-    };
+  if (existingArcher) {
+    // ✅ PRE-FILL EXISTING DATA
+    document.getElementById('regDob').value = existingArcher.dob || '';
+    document.getElementById('regGender').value = existingArcher.gender || '';
+    document.getElementById('regEquipment').value = existingArcher.defaultEquipment || '';
+    document.getElementById('regClub').value = existingArcher.club || '';
+  }
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  const form = document.getElementById('registrationForm');
+  form.onsubmit = (e) => {
+    e.preventDefault();
+    completeRegistration(user);
+  };
 }
 
 function completeRegistration(user) {
-    const dob = document.getElementById('regDob').value;
-    const gender = document.getElementById('regGender').value;
-    const equipment = document.getElementById('regEquipment').value.trim();
-    const club = document.getElementById('regClub').value.trim();
-    
-    // Values from read-only fields
-    const first = document.getElementById('regFirstName').value;
-    const last = document.getElementById('regLastName').value;
+  const dob = document.getElementById('regDob').value;
+  const gender = document.getElementById('regGender').value;
+  const equipment = document.getElementById('regEquipment').value.trim();
+  const club = document.getElementById('regClub').value.trim();
+  const first = document.getElementById('regFirstName').value;
+  const last = document.getElementById('regLastName').value;
 
-    if (!dob || !gender) return; // HTML required attribute handles msg
+  if (!dob || !gender) {
+    alert('❌ Please fill in Date of Birth and Gender!');
+    return;
+  }
 
-    // 1. Save new archer to DB
-    const data = loadData();
-    if (!data.archers) data.archers = [];
+  const data = loadData();
+  if (!data.archers) data.archers = [];
 
+  //  CHECK IF ARCHER ALREADY EXISTS (by email)
+  const existingArcher = data.archers.find(a => a.email === user.email);
+
+  if (existingArcher) {
+    //  UPDATE EXISTING ARCHER (ONLY NAME + OPTIONAL FIELDS)
+    existingArcher.first = first;
+    existingArcher.last = last;
+    existingArcher.dob = dob;
+    existingArcher.gender = gender;
+    existingArcher.defaultEquipment = equipment;
+    existingArcher.club = club;
+    existingArcher.updatedAt = new Date().toISOString();
+
+    // Update auth user's archerId
+    user.archerId = existingArcher.id;
+    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+
+    saveData(data);
+
+    alert("✅ Profile updated! You can now submit scores.");
+  } else {
+    // CREATE NEW ARCHER
     const newId = `a${Date.now()}`;
     const newArcher = {
-        id: newId,
-        first: first,
-        last: last,
-        email: user.email,
-        dob: dob,
-        gender: gender,
-        defaultEquipment: equipment,
-        club: club,
-        createdAt: new Date().toISOString()
+      id: newId,
+      first: first,
+      last: last,
+      email: user.email,
+      dob: dob,
+      gender: gender,
+      country: 'VN', // Default country
+      defaultEquipment: equipment,
+      club: club,
+      createdAt: new Date().toISOString()
     };
 
     data.archers.push(newArcher);
     saveData(data);
 
-    // 2. Update Auth Session with new ID
     user.archerId = newId;
     localStorage.setItem(AUTH_KEY, JSON.stringify(user));
 
-    // 3. Close & Init
-    alert("Registration complete! You can now submit scores.");
-    document.getElementById('registrationModal').style.display = 'none';
-    document.body.style.overflow = 'auto';
-    
-    initPage(user);
+    alert("✅ Registration complete! You can now submit scores.");
+  }
+
+  document.getElementById('registrationModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+  
+  initPage(user);
 }
 
+// ========== Populate Dropdowns (NO ARCHER DROPDOWN) ==========
 function populateRounds() {
   const data = loadData();
   if (!data || !data.rounds) return;
@@ -477,20 +526,6 @@ function calculateTotals() {
 }
 
 // ========== Update Displays ==========
-function updateArcherDisplay() {
-  const archerId = document.getElementById('selectArcher').value;
-  const data = loadData();
-  const archer = data.archers.find(a => a.id === archerId);
-  document.getElementById('roundDisplay').textContent = archer ? `${archer.first} ${archer.last}` : '-';
-}
-
-function updateRoundDisplay() {
-  const roundId = document.getElementById('selectRound').value;
-  const data = loadData();
-  const round = data.rounds.find(r => r.id === roundId);
-  document.getElementById('roundDisplay').textContent = round ? round.name : '-';
-}
-
 function updateCompetitionDisplay() {
   const competitionId = document.getElementById('selectCompetition').value;
   const data = loadData();
@@ -521,29 +556,32 @@ function updateDateDisplay() {
 
 function handleRoundChange() {
   const roundId = document.getElementById('selectRound').value;
-  updateRoundDisplay();
+  const data = loadData();
+  const round = data.rounds.find(r => r.id === roundId);
+  
+  document.getElementById('roundDisplay').textContent = round ? round.name : '-';
   
   if (!roundId) {
     renderScoreTable(null);
     return;
   }
   
-  const data = loadData();
-  const round = data.rounds.find(r => r.id === roundId);
   renderScoreTable(round);
 }
 
-// ========== Approve Score (USER SUBMISSION) ==========
+// ========== Submit Score (AUTO USE CURRENT USER'S ARCHER ID) ==========
 function approveScore() {
-  const archerId = document.getElementById('selectArcher').value;
+  const user = getAuthUser();
+  
+  if (!user || !user.archerId) {
+    alert('❌ Archer profile not found! Please complete registration.');
+    return;
+  }
+  
+  const archerId = user.archerId;
   const roundId = document.getElementById('selectRound').value;
   const competitionId = document.getElementById('selectCompetition').value || null;
   const recordedAt = document.getElementById('recordedAt').value;
-  
-  if (!archerId) {
-    alert('❌ Please select an archer!');
-    return;
-  }
   
   if (!roundId) {
     alert('❌ Please select a round!');
@@ -575,10 +613,8 @@ function approveScore() {
     }
   }
   
-  // Initialize stagingScores
   if (!data.stagingScores) data.stagingScores = [];
   
-  // Create staging score (USER submission)
   const stagingScore = {
     id: `st${Date.now()}`,
     archerId: archerId,
@@ -589,7 +625,7 @@ function approveScore() {
       arrows: arrows,
       total: total,
       xCount: xCount,
-      recordedBy: 'CongHuann',
+      recordedBy: user.username || user.email,
       recordedAt: new Date(recordedAt).toISOString()
     },
     adminScore: null,
@@ -601,7 +637,7 @@ function approveScore() {
   data.stagingScores.push(stagingScore);
   saveData(data);
   
-  const archerName = archer ? `${archer.first} ${archer.last}` : 'Unknown';
+  const archerName = archer ? `${archer.first} ${archer.last}` : 'You';
   alert(`✅ Score submitted for admin review!\n\n` +
         `Archer: ${archerName}\n` +
         `Round: ${round ? round.name : 'Unknown'}\n` +
@@ -617,27 +653,3 @@ function disapproveScore() {
     window.location.href = '/pages/archers.html';
   }
 }
-
-// ========== Initialize ==========
-document.addEventListener('DOMContentLoaded', () => {
-  const data = loadData();
-  
-  populateArchers();
-  populateRounds();
-  populateCompetitions();
-  
-  const now = new Date();
-  const formatted = now.toISOString().slice(0, 16);
-  const recordedInput = document.getElementById('recordedAt');
-  if (recordedInput) {
-    recordedInput.value = formatted;
-  }
-  updateDateDisplay();
-  
-  document.getElementById('selectArcher')?.addEventListener('change', updateArcherDisplay);
-  document.getElementById('selectRound')?.addEventListener('change', handleRoundChange);
-  document.getElementById('selectCompetition')?.addEventListener('change', updateCompetitionDisplay);
-  document.getElementById('recordedAt')?.addEventListener('change', updateDateDisplay);
-  
-  renderScoreTable(null);
-});
