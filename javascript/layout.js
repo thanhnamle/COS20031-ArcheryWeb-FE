@@ -12,12 +12,13 @@ const ALLOWED_PAGES = {
         '/pages/approve-score.html',
         '/pages/matches.html',
         '/pages/equipments.html',
-        '/pages/statistics.html',
         '/pages/settings.html'
     ],
     archer: [
         '/pages/dashboard.html',
         '/pages/add-score.html',
+        '/pages/archers-user.html',
+        '/pages/archer-detail-user.html',
         '/pages/settings.html'
     ]
 };
@@ -94,7 +95,6 @@ function updateSidebarForRole() {
     const hideForArcher = [
         'a[href="/pages/archers.html"]',
         'a[href="/pages/equipments.html"]',
-        'a[href="/pages/statistics.html"]',
         'a[href="/pages/approve-score.html"]',
         'a[href="/pages/matches.html"]'
     ];
@@ -104,6 +104,12 @@ function updateSidebarForRole() {
             const el = nav.querySelector(sel);
             if (el) el.style.display = 'none';
         });
+
+        const archersLink = nav.querySelector('a[href="/pages/archers.html"]');
+        if (archersLink) {
+            // Change destination to the user-friendly view
+            archersLink.href = '/pages/archers-user.html';
+        }
 
         const addScoreLink = nav.querySelector('a[href="/pages/add-score.html"]');
         if (addScoreLink) {
