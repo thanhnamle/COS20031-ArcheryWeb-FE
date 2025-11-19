@@ -23,8 +23,30 @@ document.addEventListener("DOMContentLoaded", () => {
 ------------------------------------------------------------------ */
 function getUserDatabase() {
     const raw = localStorage.getItem(USER_DB_KEY);
-    if (!raw) return [];
-    try { return JSON.parse(raw); } catch { return []; }
+    let db = [];
+
+    if (raw) {
+        try { 
+            db = JSON.parse(raw); 
+        } catch { 
+            db = []; 
+        }
+    }
+
+    const adminEmail = 'admin@app.com';
+    // Check if admin exists
+    if (!db.some(u => u.email === adminEmail)) {
+        db.push({
+            name: "System Admin",
+            email: adminEmail,
+            password: "admin123",
+            role: "admin"
+        });
+        // Save immediately so it persists
+        saveUserDatabase(db);
+    }
+
+    return db;
 }
 function saveUserDatabase(db) {
     localStorage.setItem(USER_DB_KEY, JSON.stringify(db));
@@ -74,32 +96,32 @@ function handleSignup(event) {
     saveUserDatabase(db);
 
     // ---- if archer → create linked profile ----
-    if (role === 'archer') {
-        try {
-            const data = getStorageData();
+    // if (role === 'archer') {
+    //     try {
+    //         const data = getStorageData();
 
-            const [first, ...lastParts] = name.split(' ');
-            const last = lastParts.join(' ') || "User";
+    //         const [first, ...lastParts] = name.split(' ');
+    //         const last = lastParts.join(' ') || "User";
 
-            const profile = {
-                id:        `a${Date.now()}`,
-                first:     first || "New",
-                last:      last,
-                email:     email,
-                dob:       "2000-01-01",
-                gender:    "M",
-                createdAt: new Date().toISOString()
-            };
+    //         const profile = {
+    //             id:        `a${Date.now()}`,
+    //             first:     first || "New",
+    //             last:      last,
+    //             email:     email,
+    //             dob:       "2000-01-01",
+    //             gender:    "M",
+    //             createdAt: new Date().toISOString()
+    //         };
 
-            data.archers = data.archers || [];
-            data.archers.push(profile);
-            saveStorageData(data);
-        } catch (e) {
-            console.error("Profile creation failed:", e);
-            errorEl.textContent = "Signup OK, but profile link failed. Contact admin.";
-            return;
-        }
-    }
+    //         data.archers = data.archers || [];
+    //         data.archers.push(profile);
+    //         saveStorageData(data);
+    //     } catch (e) {
+    //         console.error("Profile creation failed:", e);
+    //         errorEl.textContent = "Signup OK, but profile link failed. Contact admin.";
+    //         return;
+    //     }
+    // }
 
     // ---- log the fresh user in (single source of truth) ----
     loginUser(email, password);   // this already stores AUTH_KEY + redirects
@@ -119,7 +141,7 @@ function handleLogin(event) {
    CORE LOGIN (shared by signup & login)
 ------------------------------------------------------------------ */
 function loginUser(email, password) {
-    const errorEl = document.getElementById("authError");   // may be null on post-signup call
+    const errorEl = document.getElementById("authError");   
 
     if (!email || !password) {
         if (errorEl) errorEl.textContent = "Please enter both email and password.";
@@ -134,20 +156,19 @@ function loginUser(email, password) {
         return;
     }
 
-    // ---- role fallback (keeps old admin shortcut alive) ----
     const role = user.role || (email === 'admin@app.com' ? 'admin' : 'archer');
 
     // ---- archer → find profile id ----
     let archerId = null;
     if (role === 'archer') {
-        const data    = getStorageData();
-        const profile = data.archers.find(a => a.email === email);
-        if (!profile) {
-            if (errorEl) errorEl.textContent = "Account not linked to a profile. Contact admin.";
-            console.error(`No profile for ${email}`);
-            return;
+        const data = getStorageData();
+        // Check if data.archers exists before trying to find
+        if (data.archers) {
+            const profile = data.archers.find(a => a.email === email);
+            if (profile) {
+                archerId = profile.id;
+            }
         }
-        archerId = profile.id;
     }
 
     // ---- store session (single place) ----

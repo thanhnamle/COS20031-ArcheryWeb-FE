@@ -93,6 +93,65 @@
         </main>
     </div>
 
+    <aside id="registrationModal" class="modal" style="display: none; z-index: 9999;">
+        <div class="modal-overlay" style="background: rgba(0,0,0,0.85);"></div>
+        <section class="modal-content">
+            <header class="modal-header">
+                <h2>Archer Registration</h2>
+            </header>
+
+            <article class="modal-body">
+                <p class="sub" style="margin-bottom: 1.5rem;">
+                    To start scoring, please complete your archer profile. <br>
+                    <strong>Note:</strong> Name is locked to your account settings.
+                </p>
+                <form id="registrationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="regFirstName">First Name</label>
+                            <input type="text" id="regFirstName" required readonly style="background-color: #f3f4f6; cursor: not-allowed;">
+                        </div>
+                        <div class="form-group">
+                            <label for="regLastName">Last Name</label>
+                            <input type="text" id="regLastName" required readonly style="background-color: #f3f4f6; cursor: not-allowed;">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="regDob">Date of Birth *</label>
+                            <input type="date" id="regDob" required max="2025-12-31">
+                        </div>
+                        <div class="form-group">
+                            <label for="regGender">Gender *</label>
+                            <select id="regGender" required>
+                                <option value="">Select...</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="regEquipment">Default Equipment</label>
+                        <input type="text" id="regEquipment" placeholder="e.g., Recurve, Compound">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regClub">Club (Optional)</label>
+                        <input type="text" id="regClub" placeholder="Your archery club">
+                    </div>
+                </form>
+            </article>
+
+            <footer class="modal-footer">
+                <button type="submit" form="registrationForm" class="btn-primary" style="width: 100%;">
+                    Confirm & Start Scoring
+                </button>
+            </footer>
+        </section>
+    </aside>
+
     <!-- Scripts -->
     <script src="/javascript/layout.js"></script>
     <script src="/javascript/add-score.js"></script>

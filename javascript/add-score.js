@@ -74,21 +74,151 @@ function parseRoundDetails(detailsStr) {
   return result;
 }
 
-// ========== Populate Dropdowns ==========
-function populateArchers() {
-  const data = loadData();
-  if (!data || !data.archers) return;
-  
-  const select = document.getElementById('selectArcher');
-  if (!select) return;
-  
-  select.innerHTML = '<option value="">Select archer...</option>';
-  data.archers.forEach(archer => {
-    const option = document.createElement('option');
-    option.value = archer.id;
-    option.textContent = `${archer.first} ${archer.last}`;
-    select.appendChild(option);
-  });
+// ========== Initialization ==========
+document.addEventListener('DOMContentLoaded', () => {
+    const user = getAuthUser();
+    
+    // 1. Check if user needs to register
+    if (user && user.role === 'archer' && !user.archerId) {
+        showRegistrationModal(user);
+    } else {
+        // Normal initialization
+        initPage(user);
+    }
+});
+
+function getAuthUser() {
+    const raw = localStorage.getItem(AUTH_KEY);
+    return raw ? JSON.parse(raw) : null;
+}
+
+function initPage(user) {
+    populateArchers(user); // Pass user to filter dropdown
+    populateRounds();
+    populateCompetitions();
+    
+    // Set default date
+    const now = new Date();
+    // Adjust to local ISO string roughly
+    const localIso = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+    const recordedInput = document.getElementById('recordedAt');
+    if (recordedInput) recordedInput.value = localIso;
+    
+    updateDateDisplay();
+    
+    // Listeners
+    document.getElementById('selectArcher')?.addEventListener('change', updateArcherDisplay);
+    document.getElementById('selectRound')?.addEventListener('change', handleRoundChange);
+    document.getElementById('selectCompetition')?.addEventListener('change', updateCompetitionDisplay);
+    document.getElementById('recordedAt')?.addEventListener('change', updateDateDisplay);
+    
+    renderScoreTable(null);
+}
+
+// ========== Modified Populate Archers ==========
+function populateArchers(user) {
+    const data = loadData();
+    if (!data || !data.archers) return;
+
+    const select = document.getElementById('selectArcher');
+    if (!select) return;
+
+    select.innerHTML = '';
+
+    // Logic: If Admin, show all. If Archer, ONLY show themselves.
+    if (user && user.role === 'archer' && user.archerId) {
+        const myProfile = data.archers.find(a => a.id === user.archerId);
+        if (myProfile) {
+            const option = document.createElement('option');
+            option.value = myProfile.id;
+            option.textContent = `${myProfile.first} ${myProfile.last} (You)`;
+            option.selected = true;
+            select.appendChild(option);
+            
+            // Lock the dropdown
+            select.disabled = true; 
+            // Trigger display update manually since we set it programmatically
+            setTimeout(updateArcherDisplay, 50); 
+            return;
+        }
+    }
+
+    // Default/Admin view: Show all
+    select.innerHTML = '<option value="">Select archer...</option>';
+    data.archers.forEach(archer => {
+        const option = document.createElement('option');
+        option.value = archer.id;
+        option.textContent = `${archer.first} ${archer.last}`;
+        select.appendChild(option);
+    });
+}
+
+// ========== Registration Logic ==========
+function showRegistrationModal(user) {
+    const modal = document.getElementById('registrationModal');
+    if (!modal) return;
+
+    // Split Full Name into First/Last for pre-filling
+    const nameParts = (user.name || "User").split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ') || "Archer";
+
+    document.getElementById('regFirstName').value = firstName;
+    document.getElementById('regLastName').value = lastName;
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    // Handle Form Submit
+    const form = document.getElementById('registrationForm');
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        completeRegistration(user);
+    };
+}
+
+function completeRegistration(user) {
+    const dob = document.getElementById('regDob').value;
+    const gender = document.getElementById('regGender').value;
+    const equipment = document.getElementById('regEquipment').value.trim();
+    const club = document.getElementById('regClub').value.trim();
+    
+    // Values from read-only fields
+    const first = document.getElementById('regFirstName').value;
+    const last = document.getElementById('regLastName').value;
+
+    if (!dob || !gender) return; // HTML required attribute handles msg
+
+    // 1. Save new archer to DB
+    const data = loadData();
+    if (!data.archers) data.archers = [];
+
+    const newId = `a${Date.now()}`;
+    const newArcher = {
+        id: newId,
+        first: first,
+        last: last,
+        email: user.email,
+        dob: dob,
+        gender: gender,
+        defaultEquipment: equipment,
+        club: club,
+        createdAt: new Date().toISOString()
+    };
+
+    data.archers.push(newArcher);
+    saveData(data);
+
+    // 2. Update Auth Session with new ID
+    user.archerId = newId;
+    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+
+    // 3. Close & Init
+    alert("Registration complete! You can now submit scores.");
+    document.getElementById('registrationModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+    
+    initPage(user);
 }
 
 function populateRounds() {
