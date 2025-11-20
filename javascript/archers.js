@@ -46,20 +46,23 @@ const COUNTRY_FLAGS = {
   'PH': '<i class="fi fi-ph"></i>'
 };
 
-// Load data from localStorage
-function loadData(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(!raw) return null;
-  try{ 
-    return JSON.parse(raw); 
-  } catch(e){ 
-    console.error("Error parsing data:", e);
-    return null; 
-  }
+// Replace loadData() with this:
+async function fetchArchers() {
+    const res = await fetch('/api/archers.php');
+    return await res.json();
 }
 
-function saveData(data){ 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); 
+// Replace saveArcher() logic with this:
+async function saveArcher(event) {
+    event.preventDefault();
+    // ... get formData values ...
+
+    await fetch('/api/archers.php', {
+        method: 'POST',
+        body: JSON.stringify(formData)
+    });
+    
+    // Refresh table...
 }
 
 //help function
