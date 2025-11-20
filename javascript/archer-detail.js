@@ -217,7 +217,7 @@ function renderHistoryPanel(archerId, data) {
 
 // -------------------- Actions --------------------
 function goBack() {
-  window.location.href = "/pages/archers.html";
+  window.location.href = "/archers.html";
 }
 /** Popup logic **/
 function editCurrentArcher() {
@@ -322,7 +322,7 @@ function deleteCurrentArcher() {
   data.scores = (data.scores || []).filter(s => s.archerId !== currentArcher.id);
   saveData(data);
   alert("Archer deleted.");
-  window.location.href = "/pages/archers.html";
+  window.location.href = "/archers.html";
 }
 
 // -------------------- Tabs --------------------
@@ -336,19 +336,19 @@ function renderArcherProfile() {
   const id = getArcherIdFromURL();
   if (!id) {
     alert("No archer id provided.");
-    window.location.href = "/pages/archers.html";
+    window.location.href = "/archers.html";
     return;
   }
   const data = loadData();
   if (!data) {
     alert("No data in storage.");
-    window.location.href = "/pages/archers.html";
+    window.location.href = "/archers.html";
     return;
   }
   const archer = (data.archers || []).find(a => a.id === id);
   if (!archer) {
     alert("Archer not found.");
-    window.location.href = "/pages/archers.html";
+    window.location.href = "/archers.html";
     return;
   }
   currentArcher = archer;

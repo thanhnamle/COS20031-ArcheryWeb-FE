@@ -62,7 +62,7 @@ body {
     height: 100%;
     background-color: var(--secondary-color);
     /* Giả lập ảnh bia mục tiêu lớn từ hình ảnh */
-    background-image: url('/images/archery-hero.jpg');
+    background-image: url('../images/archery-hero.jpg');
     background-size: cover;
     background-position: center;
     z-index: 1;

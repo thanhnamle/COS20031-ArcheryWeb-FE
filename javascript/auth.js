@@ -95,34 +95,6 @@ function handleSignup(event) {
     db.push(newUser);
     saveUserDatabase(db);
 
-    // ---- if archer → create linked profile ----
-    // if (role === 'archer') {
-    //     try {
-    //         const data = getStorageData();
-
-    //         const [first, ...lastParts] = name.split(' ');
-    //         const last = lastParts.join(' ') || "User";
-
-    //         const profile = {
-    //             id:        `a${Date.now()}`,
-    //             first:     first || "New",
-    //             last:      last,
-    //             email:     email,
-    //             dob:       "2000-01-01",
-    //             gender:    "M",
-    //             createdAt: new Date().toISOString()
-    //         };
-
-    //         data.archers = data.archers || [];
-    //         data.archers.push(profile);
-    //         saveStorageData(data);
-    //     } catch (e) {
-    //         console.error("Profile creation failed:", e);
-    //         errorEl.textContent = "Signup OK, but profile link failed. Contact admin.";
-    //         return;
-    //     }
-    // }
-
     // ---- log the fresh user in (single source of truth) ----
     loginUser(email, password);   // this already stores AUTH_KEY + redirects
 }
@@ -181,5 +153,5 @@ function loginUser(email, password) {
     localStorage.setItem(AUTH_KEY, JSON.stringify(session));
 
     // ---- go to dashboard ----
-    window.location.href = "/pages/dashboard.html";
+    window.location.href = "dashboard.html";
 }

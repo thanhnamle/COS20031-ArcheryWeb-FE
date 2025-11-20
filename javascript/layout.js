@@ -5,21 +5,21 @@
 ------------------------------------------------------------------ */
 const ALLOWED_PAGES = {
     admin: [
-        '/pages/dashboard.html',
-        '/pages/archers.html',
-        '/pages/archer-detail.html',
-        '/pages/add-score.html',
-        '/pages/approve-score.html',
-        '/pages/matches.html',
-        '/pages/equipments.html',
-        '/pages/settings.html'
+        'dashboard.html',
+        'archers.html',
+        'archer-detail.html',
+        'add-score.html',
+        'approve-score.html',
+        'matches.html',
+        'equipments.html',
+        'settings.html'
     ],
     archer: [
-        '/pages/dashboard.html',
-        '/pages/add-score.html',
-        '/pages/archers-user.html',
-        '/pages/archer-detail-user.html',
-        '/pages/settings.html'
+        'dashboard.html',
+        'add-score.html',
+        'archers-user.html',
+        'archer-detail-user.html',
+        'settings.html'
     ]
 };
 
@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!user) {
         // Not logged in → go to login (except when already on login/signup)
         const path = window.location.pathname;
-        if (!path.includes('/pages/login.html') && !path.includes('/pages/signup.html')) {
-            window.location.href = '/pages/login.html';
+        if (!path.includes('login.html') && !path.includes('signup.html')) {
+            window.location.href = 'login.html';
         }
         return;
     }
@@ -58,7 +58,7 @@ function enforcePageAccess(role) {
     // If the current page is NOT in the allowed list → redirect
     if (!allowed.some(p => path.includes(p))) {
         console.warn(`Role "${role}" not allowed on ${path}. Redirecting to dashboard.`);
-        window.location.href = '/pages/dashboard.html';
+        window.location.href = 'dashboard.html';
     }
 }
 
@@ -66,7 +66,7 @@ function enforcePageAccess(role) {
    HEADER / SIDEBAR
 ------------------------------------------------------------------ */
 function loadHeader() {
-    fetch('/header.html')
+    fetch('header.html')
         .then(r => {
             if (!r.ok) throw new Error(r.statusText);
             return r.text();
@@ -93,10 +93,10 @@ function updateSidebarForRole() {
 
     // ---- 1. Hide links that the role must NOT see ----
     const hideForArcher = [
-        'a[href="/pages/archers.html"]',
-        'a[href="/pages/equipments.html"]',
-        'a[href="/pages/approve-score.html"]',
-        'a[href="/pages/matches.html"]'
+        'a[href="archers.html"]',
+        'a[href="equipments.html"]',
+        'a[href="approve-score.html"]',
+        'a[href="matches.html"]'
     ];
 
     if (role === 'archer') {
@@ -105,13 +105,13 @@ function updateSidebarForRole() {
             if (el) el.style.display = 'none';
         });
 
-        const archersLink = nav.querySelector('a[href="/pages/archers.html"]');
+        const archersLink = nav.querySelector('a[href="archers.html"]');
         if (archersLink) {
             // Change destination to the user-friendly view
-            archersLink.href = '/pages/archers-user.html';
+            archersLink.href = 'archers-user.html';
         }
 
-        const addScoreLink = nav.querySelector('a[href="/pages/add-score.html"]');
+        const addScoreLink = nav.querySelector('a[href="add-score.html"]');
         if (addScoreLink) {
             addScoreLink.style.display = 'flex'; // Make sure it's visible
             const span = addScoreLink.querySelector('span');
@@ -121,9 +121,9 @@ function updateSidebarForRole() {
 
     // ---- 2. Admin: rename "Add Score" → "Approve Scores" ----
     if (role === 'admin') {
-        const addScoreLink = nav.querySelector('a[href="/pages/add-score.html"]');
+        const addScoreLink = nav.querySelector('a[href="add-score.html"]');
         if (addScoreLink) {
-            addScoreLink.href = '/pages/approve-score.html';
+            addScoreLink.href = 'approve-score.html';
             const span = addScoreLink.querySelector('span');
             if (span) span.textContent = 'Approve Scores';
         }
@@ -180,16 +180,16 @@ function setActiveNavigation() {
 
     // 2. Special cases
     if (!best) {
-        if (path.includes('/pages/archer-detail.html')) {
-            best = document.querySelector('a[href="/pages/archers.html"]');
-        } else if (path.includes('/pages/approve-score.html')) {
-            best = document.querySelector('a[href="/pages/approve-score.html"]');
+        if (path.includes('archer-detail.html')) {
+            best = document.querySelector('a[href="archers.html"]');
+        } else if (path.includes('approve-score.html')) {
+            best = document.querySelector('a[href="approve-score.html"]');
         }
     }
 
     // 3. Fallback to Dashboard for root pages
-    if (!best && (path === '/' || path === '/index.html')) {
-        best = document.querySelector('a[href="/pages/dashboard.html"]');
+    if (!best && (path === '/' || path === 'index.html')) {
+        best = document.querySelector('a[href="dashboard.html"]');
     }
 
     if (best) best.classList.add('active');
@@ -204,5 +204,5 @@ function logout() {
     localStorage.removeItem("archery_auth_user");
     // Optional: clear demo data if you still use it
     // localStorage.removeItem("archery_demo_data_v1");
-    window.location.href = '/index.html';
+    window.location.href = 'index.html';
 }

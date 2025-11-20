@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check if user is logged in
   if (!user) {
     alert('❌ You must be logged in to add scores!');
-    window.location.href = '/pages/login.html';
+    window.location.href = '/login.html';
     return;
   }
   
@@ -645,11 +645,11 @@ function approveScore() {
         `X's: ${xCount}\n\n` +
         `Your score will appear on Archers page after admin approval.`);
   
-  window.location.href = '/pages/archers.html';
+  window.location.href = '/archers.html';
 }
 
 function disapproveScore() {
   if (confirm('⚠️ Are you sure you want to discard this score?\n\nAll entered data will be lost.')) {
-    window.location.href = '/pages/archers.html';
+    window.location.href = '/archers.html';
   }
 }

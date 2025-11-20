@@ -356,5 +356,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // View archer detail page (user view)
 function viewArcherDetail(id){
-  window.location.href = `/pages/archer-detail-user.html?id=${id}`;
+  window.location.href = `/archer-detail-user.html?id=${id}`;
 }

@@ -20,7 +20,7 @@ function loadProfileInfo() {
     const userRaw = localStorage.getItem(AUTH_KEY);
     if (!userRaw) {
         console.error("Not logged in.");
-        window.location.href = '/pages/login.html';
+        window.location.href = '/login.html';
         return;
     }
 
