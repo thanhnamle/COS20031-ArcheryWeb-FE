@@ -87,7 +87,7 @@ nav.nav{
 .btn.primary{ background:linear-gradient(90deg,#1e40af,#3b82f6); color:#fff; border:none;}
 footer{ color:var(--muted); font-size:13px; text-align:center; margin-top:18px; }
 
-/*Archers.html style*/
+/*Archers.php style*/
 
 /* PAGE HEADER  */
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }

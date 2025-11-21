@@ -5,8 +5,8 @@
 ------------------------------------------------------------------ */
 const ALLOWED_PAGES = {
     admin: [
-        'dashboard.html',
-        'archers.html',
+        'dashboard.php',
+        'archers.php',
         'archer-detail.html',
         'add-score.html',
         'approve-score.html',
@@ -15,7 +15,7 @@ const ALLOWED_PAGES = {
         'settings.html'
     ],
     archer: [
-        'dashboard.html',
+        'dashboard.php',
         'add-score.html',
         'archers-user.html',
         'archer-detail-user.html',
@@ -58,7 +58,7 @@ function enforcePageAccess(role) {
     // If the current page is NOT in the allowed list → redirect
     if (!allowed.some(p => path.includes(p))) {
         console.warn(`Role "${role}" not allowed on ${path}. Redirecting to dashboard.`);
-        window.location.href = 'dashboard.html';
+        window.location.href = 'dashboard.php';
     }
 }
 
@@ -93,7 +93,7 @@ function updateSidebarForRole() {
 
     // ---- 1. Hide links that the role must NOT see ----
     const hideForArcher = [
-        'a[href="archers.html"]',
+        'a[href="archers.php"]',
         'a[href="equipments.html"]',
         'a[href="approve-score.html"]',
         'a[href="matches.html"]'
@@ -105,7 +105,7 @@ function updateSidebarForRole() {
             if (el) el.style.display = 'none';
         });
 
-        const archersLink = nav.querySelector('a[href="archers.html"]');
+        const archersLink = nav.querySelector('a[href="archers.php"]');
         if (archersLink) {
             // Change destination to the user-friendly view
             archersLink.href = 'archers-user.html';
@@ -181,7 +181,7 @@ function setActiveNavigation() {
     // 2. Special cases
     if (!best) {
         if (path.includes('archer-detail.html')) {
-            best = document.querySelector('a[href="archers.html"]');
+            best = document.querySelector('a[href="archers.php"]');
         } else if (path.includes('approve-score.html')) {
             best = document.querySelector('a[href="approve-score.html"]');
         }
@@ -189,7 +189,7 @@ function setActiveNavigation() {
 
     // 3. Fallback to Dashboard for root pages
     if (!best && (path === '/' || path === 'index.html')) {
-        best = document.querySelector('a[href="dashboard.html"]');
+        best = document.querySelector('a[href="dashboard.php"]');
     }
 
     if (best) best.classList.add('active');

@@ -153,5 +153,5 @@ function loginUser(email, password) {
     localStorage.setItem(AUTH_KEY, JSON.stringify(session));
 
     // ---- go to dashboard ----
-    window.location.href = "dashboard.html";
+    window.location.href = "dashboard.php";
 }
